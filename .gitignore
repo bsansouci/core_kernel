@@ -5,3 +5,7 @@ _build/
 /*.docdir
 /*.native
 /*.byte
+
+node_modules
+.jenga
+_build
