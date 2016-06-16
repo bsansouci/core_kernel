@@ -107,7 +107,7 @@ end
 
 (* Check that conflicting flags leads to an error. *)
 let%test _ =
-  Result.is_error
+  OcamlResult.Result.is_error
     (Result.try_with (fun () ->
       let module M =
             Make (struct

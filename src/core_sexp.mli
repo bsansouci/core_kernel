@@ -45,7 +45,7 @@ type 'a no_raise = 'a [@@deriving bin_io, sexp]
     If [Reason_to_stop.t_of_sexp] fails, you can still tell it was a [Stop] query.
 *)
 module Sexp_maybe : sig
-  type 'a t = ('a, Sexp.t * Error.t) Result.t [@@deriving bin_io, compare, sexp]
+  type 'a t = ('a, Sexp.t * Error.t) OcamlResult.Result.t [@@deriving bin_io, compare, sexp]
 end
 
 (** A [With_text.t] is a value paired with the full textual representation of its sexp.

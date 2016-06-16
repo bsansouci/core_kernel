@@ -1,4 +1,4 @@
-open Result.Export
+open Core_result.Export
 module List = ListLabels
 
 let invalid_argf = Core_printf.invalid_argf
@@ -93,9 +93,9 @@ let%test_unit _ =
   List.iter [ 0; 1; 2 ] ~f:(fun length ->
     List.iter vals ~f:(fun pos ->
       List.iter vals ~f:(fun len ->
-        let result = Result.try_with (fun () -> check_pos_len_exn ~pos ~len ~length) in
+        let result = OcamlResult.Result.try_with (fun () -> check_pos_len_exn ~pos ~len ~length) in
         let valid = pos >= 0 && len >= 0 && len <= length - pos in
-        assert (valid = Result.is_ok result))))
+        assert (valid = OcamlResult.Result.is_ok result))))
 ;;
 
 let get_pos_len_exn ?(pos = 0) ?len ~length =
@@ -109,7 +109,7 @@ let%test_unit _ =
   List.iter [ 0; 1; 2 ] ~f:(fun length ->
     List.iter opts ~f:(fun pos ->
       List.iter opts ~f:(fun len ->
-        let result = Result.try_with (fun () -> get_pos_len_exn ?pos ?len ~length) in
+        let result = OcamlResult.Result.try_with (fun () -> get_pos_len_exn ?pos ?len ~length) in
         let pos = match pos with Some x -> x | None -> 0 in
         let len = match len with Some x -> x | None -> length - pos in
         let valid = pos >= 0 && len >= 0 && len <= length - pos in
@@ -122,5 +122,5 @@ let%test_unit _ =
 ;;
 
 let get_pos_len ?pos ?len ~length =
-  try Result.Ok (get_pos_len_exn ?pos ?len ~length)
-  with Invalid_argument s -> Result.Error s
+  try OcamlResult.Result.Ok (get_pos_len_exn ?pos ?len ~length)
+  with Invalid_argument s -> OcamlResult.Result.Error s

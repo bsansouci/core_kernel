@@ -33,12 +33,12 @@ module Sexp_maybe = struct
     include Comparable.Poly (Error)
   end
 
-  type 'a t = ('a, sexp * Error.t) Result.t [@@deriving bin_io, compare]
+  type 'a t = ('a, sexp * Error.t) Core_result.t [@@deriving bin_io, compare]
 
   let sexp_of_t sexp_of_a t =
     match t with
-    | Result.Ok a -> sexp_of_a a
-    | Result.Error (sexp, err) ->
+    | Core_result.Ok a -> sexp_of_a a
+    | Core_result.Error (sexp, err) ->
       Sexp.List [
         Sexp.Atom "sexp_parse_error";
         sexp;
@@ -49,13 +49,13 @@ module Sexp_maybe = struct
     match sexp with
     | Sexp.List [ Sexp.Atom "sexp_parse_error"; sexp; _ ]
     | sexp ->
-      try Result.Ok (a_of_sexp sexp)
-      with exn -> Result.Error (sexp, Error.of_exn exn)
+      try Core_result.Ok (a_of_sexp sexp)
+      with exn -> Core_result.Error (sexp, Error.of_exn exn)
 
 end
 
 module With_text = struct
-  open Result.Export
+  open Core_result.Export
 
   type 'a t =
     { value: 'a

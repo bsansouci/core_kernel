@@ -27,7 +27,7 @@ module Make () = struct
           failwiths "invariant pre-condition failed" (name, exn)
             [%sexp_of: string * exn]
       end;
-      let result_or_exn = Result.try_with f in
+      let result_or_exn = Core_result.try_with f in
       if !check_invariant
       then begin
         try List.iter ts ~f:invariant with exn ->
@@ -36,8 +36,8 @@ module Make () = struct
       end;
       if !show_messages
       then eprints (String.concat ~sep:"" [ module_name; "."; name; "-result" ])
-             result_or_exn [%sexp_of: (result, exn) Result.t];
-      Result.ok_exn result_or_exn;
+             result_or_exn [%sexp_of: (result, exn) Core_result.t];
+      Core_result.ok_exn result_or_exn;
   ;;
 end
 

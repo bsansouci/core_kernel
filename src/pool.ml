@@ -1,5 +1,3 @@
-#import "config.h"
-
 open Int_replace_polymorphic_compare
 open Sexplib.Conv
 open Pool_intf
@@ -102,19 +100,11 @@ module Pool = struct
    address-space sizes, so we choose [array_index_num_bits] differently.  We write
    both numbers as constants for performance reasons -- the compiler generates better
    code when they are constants rather than expressions. *)
-#ifdef JSC_ARCH_SIXTYFOUR
-
-let () = assert (Int.num_bits = 63)
-let array_index_num_bits = 30
-let masked_tuple_id_num_bits = 33
-
-#else
 
 let () = assert (Int.num_bits = 31 || Int.num_bits = 32)
 let array_index_num_bits = 22
 let masked_tuple_id_num_bits = Int.num_bits - array_index_num_bits
 
-#endif
 
 let%test _ = array_index_num_bits > 0
 let%test _ = masked_tuple_id_num_bits > 0
@@ -152,11 +142,7 @@ end = struct
   let init = 0
 
   let next t =
-#ifdef JSC_ARCH_SIXTYFOUR
-    t + 1
-#else
     if t = Int.max_value then 0 else t + 1
-#endif
 ;;
 
 let to_int t = t
@@ -862,11 +848,11 @@ module Debug (Pool : S) = struct
     let prefix = "Pool." in
     if !check_invariant then List.iter ts ~f:(invariant ignore);
     if !show_messages then Debug.eprints (concat [ prefix; name ]) arg sexp_of_arg;
-    let result_or_exn = Result.try_with f in
+    let result_or_exn = Core_result.try_with f in
     if !show_messages
     then Debug.eprints (concat [ prefix; name; " result" ]) result_or_exn
-           [%sexp_of: (result, exn) Result.t];
-    Result.ok_exn result_or_exn;
+           [%sexp_of: (result, exn) Core_result.t];
+    Core_result.ok_exn result_or_exn;
   ;;
 
   module Slots = Slots

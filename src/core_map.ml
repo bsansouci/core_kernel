@@ -133,7 +133,7 @@ module Tree0 = struct
 
   let of_sorted_array array ~compare_key =
     match array with
-    | [||] | [|_|] -> Result.Ok (of_sorted_array_unchecked array ~compare_key)
+    | [||] | [|_|] -> OcamlResult.Result.Ok (of_sorted_array_unchecked array ~compare_key)
     | _ ->
       with_return (fun r ->
         let increasing =
@@ -148,7 +148,7 @@ module Tree0 = struct
             if Pervasives.(<>) (i < 0) increasing then
               r.return (Or_error.error_string "of_sorted_array: elements are not ordered")
         done;
-        Result.Ok (of_sorted_array_unchecked array ~compare_key)
+        OcamlResult.Result.Ok (of_sorted_array_unchecked array ~compare_key)
       )
 
   let bal l x d r =
@@ -834,7 +834,7 @@ module Tree0 = struct
 
   let of_alist_or_error alist ~comparator =
     match of_alist alist ~compare_key:comparator.Comparator.compare with
-    | `Ok x -> Result.Ok x
+    | `Ok x -> OcamlResult.Result.Ok x
     | `Duplicate_key key ->
       let sexp_of_key = comparator.Comparator.sexp_of_t in
       Or_error.error "Map.of_alist_exn: duplicate key" key [%sexp_of: key]
@@ -842,8 +842,8 @@ module Tree0 = struct
 
   let of_alist_exn alist ~comparator =
     match of_alist_or_error alist ~comparator with
-    | Result.Ok x -> x
-    | Result.Error e -> Error.raise e
+    | OcamlResult.Result.Ok x -> x
+    | OcamlResult.Result.Error e -> Error.raise e
   ;;
 
   let of_alist_multi alist ~compare_key =
@@ -1153,7 +1153,7 @@ let of_alist ~comparator alist =
 ;;
 
 let of_alist_or_error ~comparator alist =
-  Result.map (Tree0.of_alist_or_error alist ~comparator)
+  Core_result.map (Tree0.of_alist_or_error alist ~comparator)
     ~f:(fun tree -> of_tree0 ~comparator tree)
 ;;
 

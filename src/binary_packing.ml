@@ -4,13 +4,6 @@ module Char = Caml.Char
 module Int32 = Caml.Int32
 module Int64 = Caml.Int64
 
-#import "config.h"
-
-#ifdef JSC_ARCH_SIXTYFOUR
-let   signed_max = Int32.to_int Int32.max_int
-let unsigned_max = Int64.to_int 0xffff_ffffL
-#endif
-
 type endian = [ `Big_endian | `Little_endian ] [@@deriving compare, sexp]
 
 (* Computes the offset based on the total number of bytes, the byte order, and the
@@ -281,13 +274,8 @@ end))
 
 exception Pack_unsigned_32_argument_out_of_range of int [@@deriving sexp]
 let check_unsigned_32_in_range n =
-#ifdef JSC_ARCH_SIXTYFOUR
-    if n > unsigned_max || n < 0 then
-      raise (Pack_unsigned_32_argument_out_of_range n)
-#else
     if n < 0 then
       raise (Pack_unsigned_32_argument_out_of_range n)
-#endif
 
 let pack_unsigned_32_int ~byte_order ~buf ~pos n =
   assert (Sys.word_size = 64);
@@ -316,13 +304,8 @@ let pack_unsigned_32_int_little_endian ~buf ~pos n =
 
 exception Pack_signed_32_argument_out_of_range of int [@@deriving sexp]
 let check_signed_32_in_range n =
-#ifdef JSC_ARCH_SIXTYFOUR
-    if n > signed_max || n < -(signed_max + 1) then
-      raise (Pack_signed_32_argument_out_of_range n)
-#else
     if false then
       raise (Pack_signed_32_argument_out_of_range n)
-#endif
 
 let pack_signed_32_int ~byte_order ~buf ~pos n =
   assert (Sys.word_size = 64);
@@ -394,63 +377,11 @@ let unpack_unsigned_32_int_little_endian ~buf ~pos =
   b1 lor b2 lor b3 lor b4
 ;;
 
-#ifdef JSC_ARCH_SIXTYFOUR
-
-let unpack_signed_32_int ~byte_order ~buf ~pos =
-  let n = unpack_unsigned_32_int ~byte_order ~buf ~pos in
-  if n > signed_max then -(((signed_max + 1) lsl 1) - n)
-  else n
-;;
-
-let unpack_signed_32_int_big_endian ~buf ~pos =
-  let n = unpack_unsigned_32_int_big_endian ~buf ~pos in
-  if n > signed_max then n - (unsigned_max + 1) else n
-;;
-
-let unpack_signed_32_int_little_endian ~buf ~pos =
-  let n = unpack_unsigned_32_int_little_endian ~buf ~pos in
-  if n > signed_max then n - (unsigned_max + 1) else n
-;;
-
-let%test_module "inline_unsigned_32_int" = (module Make_inline_tests (struct
-  let ns = [0x3f20_3040; 0x7f20_3040;
-            signed_max; signed_max + 1; unsigned_max; 0]
-  let num_bytes = 4
-  let signed = false
-  type t = int
-  let of_int64 = Int64.to_int
-  let to_int64 = Int64.of_int
-  let pack = pack_unsigned_32_int
-  let unpack = unpack_unsigned_32_int
-  let pack_big_endian = pack_unsigned_32_int_big_endian
-  let unpack_big_endian = unpack_unsigned_32_int_big_endian
-  let pack_little_endian = pack_unsigned_32_int_little_endian
-  let unpack_little_endian = unpack_unsigned_32_int_little_endian
-end))
-
-let%test_module "inline_signed_32_int" = (module Make_inline_tests (struct
-  let ns = [0x3f20_3040; 0x7f20_3040; -0x7f20_3040;
-            signed_max; -(signed_max + 1); 0]
-  let num_bytes = 4
-  let signed = true
-  type t = int
-  let of_int64 = Int64.to_int
-  let to_int64 = Int64.of_int
-  let pack = pack_signed_32_int
-  let unpack = unpack_signed_32_int
-  let pack_big_endian = pack_signed_32_int_big_endian
-  let unpack_big_endian = unpack_signed_32_int_big_endian
-  let pack_little_endian = pack_signed_32_int_little_endian
-  let unpack_little_endian = unpack_signed_32_int_little_endian
-end))
-
-#else
 
 let unpack_signed_32_int               = unpack_unsigned_32_int
 let unpack_signed_32_int_big_endian    = unpack_unsigned_32_int_big_endian
 let unpack_signed_32_int_little_endian = unpack_unsigned_32_int_little_endian
 
-#endif
  (* ARCH_SIXTYFOUR *)
 
 let pack_signed_64 ~byte_order ~buf ~pos v =
@@ -536,22 +467,12 @@ let unpack_signed_64_big_endian ~buf ~pos =
   and b6 = Char.code (Caml.Bytes.unsafe_get buf (pos + 5))
   and b7 = Char.code (Caml.Bytes.unsafe_get buf (pos + 6)) in
 
-#ifdef JSC_ARCH_SIXTYFOUR
-
-  let i1 = Int64.of_int (                                b1)
-  and i2 = Int64.of_int ((b2 lsl 48) lor (b3 lsl 40) lor
-                         (b4 lsl 32) lor (b5 lsl 24) lor
-                         (b6 lsl 16) lor (b7 lsl  8) lor b8) in
-  Int64.(logor i2 (shift_left i1 56))
-
-#else
 
   let i1 = Int64.of_int (                (b1 lsl 8) lor b2)
   and i2 = Int64.of_int ((b3 lsl 16) lor (b4 lsl 8) lor b5)
   and i3 = Int64.of_int ((b6 lsl 16) lor (b7 lsl 8) lor b8) in
   Int64.(logor i3 (logor (shift_left i2 24) (shift_left i1 48)))
 
-#endif
 ;;
 
 let unpack_signed_64_little_endian ~buf ~pos =
@@ -566,22 +487,12 @@ let unpack_signed_64_little_endian ~buf ~pos =
   and b6 = Char.code (Caml.Bytes.unsafe_get buf (pos + 5))
   and b7 = Char.code (Caml.Bytes.unsafe_get buf (pos + 6)) in
 
-#ifdef JSC_ARCH_SIXTYFOUR
-
-  let i1 = Int64.of_int ( b1         lor (b2 lsl  8) lor
-                         (b3 lsl 16) lor (b4 lsl 24) lor
-                         (b5 lsl 32) lor (b6 lsl 40) lor (b7 lsl 48))
-  and i2 = Int64.of_int   b8         in
-  Int64.(logor i1 (shift_left i2 56))
-
-#else
 
   let i1 = Int64.of_int (b1 lor (b2 lsl 8) lor (b3 lsl 16))
   and i2 = Int64.of_int (b4 lor (b5 lsl 8) lor (b6 lsl 16))
   and i3 = Int64.of_int (b7 lor (b8 lsl 8)) in
   Int64.(logor i1 (logor (shift_left i2 24) (shift_left i3 48)))
 
-#endif
 ;;
 
 let pack_signed_64_int ~byte_order ~buf ~pos n =
@@ -688,28 +599,6 @@ let unpack_signed_64_int_little_endian ~buf ~pos =
   (b7 lsl 48) lor (b8 lsl 56)
 ;;
 
-#ifdef JSC_ARCH_SIXTYFOUR
-let%test_unit "63 bits overflow" =
-  let buf = String.create 8 in
-  let pos = 0 in
-  List.iter
-    [pack_signed_64_little_endian, unpack_signed_64_int_little_endian;
-     pack_signed_64_big_endian, unpack_signed_64_int_big_endian]
-    ~f:(fun (pack, unpack) ->
-      List.iter [
-        Int64.max_int, Some 127;
-        Int64.min_int, Some 128;
-        Int64.(add (of_int Int.max_value) 1L), Some 64;
-        Int64.(add (of_int Int.min_value) (-1L)), Some 191;
-        Int64.(of_int Int.max_value), None;
-        Int64.(of_int Int.min_value), None;
-      ] ~f:(fun (n, opt) ->
-          pack ~buf ~pos n;
-          try ignore (unpack ~buf ~pos : int); assert (opt = None)
-          with Unpack_signed_64_int_most_significant_byte_too_large n when Some n = opt -> ()
-       ))
-;;
-#endif
 
 let%test_module "inline_signed_64" = (module Make_inline_tests (struct
   let ns = [0x3f20_3040_5060_7080L;
@@ -731,32 +620,6 @@ let%test_module "inline_signed_64" = (module Make_inline_tests (struct
   let unpack_little_endian = unpack_signed_64_little_endian
 end))
 
-#ifdef JSC_ARCH_SIXTYFOUR
-
-let%test_module "inline_signed_64_int" =
-  (module Make_inline_tests (struct
-  (* These numbers are written with one endianness and read with the opposite endianness,
-     so the smallest byte becomes the biggest byte. Because of this, the range restriction
-     that applies to the biggest byte also applies to the smallest byte. *)
-  let ns = [0x3f20_3040_5060_0708L;
-            0x7f20_3040_5060_0708L;
-           -0x7f20_3040_5060_0708L;
-            0x7fff_ffff_ffff_0000L;
-            0L] |> List.map ~f:Int64.to_int
-  let num_bytes = 8
-  let signed = true
-  type t = int
-  let of_int64 = Int64.to_int
-  let to_int64 = Int64.of_int
-  let pack = pack_signed_64_int
-  let unpack = unpack_signed_64_int
-  let pack_big_endian = pack_signed_64_int_big_endian
-  let unpack_big_endian = unpack_signed_64_int_big_endian
-  let pack_little_endian = pack_signed_64_int_little_endian
-  let unpack_little_endian = unpack_signed_64_int_little_endian
-end))
-
-#endif
 
 let pack_float ~byte_order ~buf ~pos f =
   pack_signed_64 ~byte_order ~buf ~pos (Int64.bits_of_float f)

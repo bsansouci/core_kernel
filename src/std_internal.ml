@@ -94,7 +94,7 @@ let fprintf  = Printf.fprintf
 let sprintf  = Printf.sprintf
 let ksprintf = Printf.ksprintf
 
-include Result.Export
+include Core_result.Export
 include Either.Export
 (* With the following aliases, we are just making extra sure that the toplevel sexp
    converters line up with the ones in our modules. *)

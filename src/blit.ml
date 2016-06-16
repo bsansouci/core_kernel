@@ -1,6 +1,6 @@
 open Sexplib.Conv
 module Sexp = Sexplib.Sexp
-open Result.Export
+open Core_result.Export
 module List = Core_list
 module Array = StdLabels.Array
 

@@ -24,14 +24,14 @@ val eprintf : ('r, unit, string, unit) format4 -> 'r
       module Foo = struct
         type t = ...
           let invariant = ...
-            let bar t x y : Result.t = ...
+            let bar t x y : OcamlResult.Result.t = ...
       end
       module Foo_debug = struct
         open Foo
         include Debug.Make ()
         let debug x = debug invariant ~module_name:"Foo" x
         let bar t x y =
-          debug "bar" [t] (t, x, y) <:sexp_of< t * X.t * Y.t >> <:sexp_of< Result.t >>
+          debug "bar" [t] (t, x, y) <:sexp_of< t * X.t * Y.t >> <:sexp_of< OcamlResult.Result.t >>
             (fun () -> bar t x y)
       end
     ]}

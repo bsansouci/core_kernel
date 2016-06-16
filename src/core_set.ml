@@ -170,7 +170,7 @@ module Tree0 = struct
 
   let of_sorted_array array ~compare_elt =
     match array with
-    | [||] | [|_|] -> Result.Ok (of_sorted_array_unchecked array ~compare_elt)
+    | [||] | [|_|] -> OcamlResult.Result.Ok (of_sorted_array_unchecked array ~compare_elt)
     | _ ->
       with_return (fun r ->
         let increasing =
@@ -185,7 +185,7 @@ module Tree0 = struct
             if Pervasives.(<>) (i < 0) increasing then
               r.return (Or_error.error_string "of_sorted_array: elements are not ordered")
         done;
-        Result.Ok (of_sorted_array_unchecked array ~compare_elt)
+        OcamlResult.Result.Ok (of_sorted_array_unchecked array ~compare_elt)
       )
 
   (* Same as create, but performs one step of rebalancing if necessary.

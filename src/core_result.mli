@@ -8,8 +8,8 @@
     | "CSCO" -> Ok "CSCO.OQ"
     | _ as ticker -> Error (sprintf "can't find ric of %s" ticker) ]}
     The return type of ric_of_ticker could be [string option], but [(string, string)
-    Result.t] gives more control over the error message. *)
-type ('ok, 'err) t = ('ok, 'err) Result_lib.Result.result =
+    OcamlResult.t] gives more control over the error message. *)
+type ('ok, 'err) t = ('ok, 'err) OcamlResult.Result.t =
   | Ok of 'ok
   | Error of 'err
 [@@deriving bin_io, sexp, compare]

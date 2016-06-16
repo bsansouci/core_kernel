@@ -4,15 +4,18 @@
   "description": "Industrial strength alternative to OCaml's standard library",
   "license": "Apache-2.0",
   "scripts": {
-    "preinstall": "config/detect.sh && config/discover.sh `which ocamlc` config.h && node runMe.js && mv config.h src/config.h" 
+    "preinstall": "config/detect.sh && config/discover.sh `which ocamlc` src/config.h && node runMe.js" 
   },
+  "cdeps": ["bigarray"],
   "dependencies": {
     "bin_prot": "0.0.1",
-    "filedslib": "0.0.1",
-    "result": "0.0.1",
+    "fieldslib": "0.0.1",
+    "ocamlResult": "0.0.1",
     "sexplib": "0.0.1",
-    "typerep": "0.0.1",
+    "typerep_lib": "0.0.1",
     "variantslib": "0.0.1",
+    "ppx_inline_test": "0.0.1",
+    "ppx_assert_lib": "0.0.1",
     "OcamlCppo": "git://github.com/bsansouci/cppo.git"
   },
   "repository": {

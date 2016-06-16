@@ -9,7 +9,7 @@
 open Sexplib
 
 (** Serialization and comparison of an [Error] force the error's lazy message. **)
-type 'a t = ('a, Error.t) Result.t [@@deriving bin_io, compare, sexp]
+type 'a t = ('a, Error.t) OcamlResult.Result.t [@@deriving bin_io, compare, sexp]
 
 (** [Applicative] functions don't have quite the same semantics as
     [Applicative.of_Monad(Or_error)] would give -- [apply (Error e1) (Error e2)] returns
@@ -21,7 +21,7 @@ include Monad.S            with type 'a t := 'a t
 
 val ignore : _ t -> unit t
 
-(** [try_with f] catches exceptions thrown by [f] and returns them in the Result.t as an
+(** [try_with f] catches exceptions thrown by [f] and returns them in the OcamlResult.t as an
     Error.t.  [try_with_join] is like [try_with], except that [f] can throw exceptions or
     return an Error directly, without ending up with a nested error; it is equivalent to
     [Result.join (try_with f)]. *)
@@ -36,7 +36,7 @@ val ok_exn : 'a t -> 'a
 val of_exn : ?backtrace:[ `Get | `This of string ] -> exn -> _ t
 
 (** [of_exn_result (Ok a) = Ok a], [of_exn_result (Error exn) = of_exn exn] *)
-val of_exn_result : ('a, exn) Result.t -> 'a t
+val of_exn_result : ('a, exn) OcamlResult.Result.t -> 'a t
 
 (** [error] is a wrapper around [Error.create]:
 

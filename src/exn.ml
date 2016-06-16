@@ -120,67 +120,6 @@ let raise_without_backtrace e =
   raise_notrace e
 ;;
 
-let%test_module __ [@tags "no-js"] = (module struct
-  exception Test_exception
-
-  let with_backtraces_enabled f =
-    let saved = Printexc.backtrace_status () in
-    Printexc.record_backtrace true;
-    protect ~f ~finally:(fun () -> Printexc.record_backtrace saved)
-  ;;
-
-  let%test_unit "clear_backtrace" =
-    with_backtraces_enabled (fun () ->
-      begin try raise Test_exception with _ -> () end;
-      assert (backtrace () <> "");
-      clear_backtrace ();
-      assert (backtrace () = ""))
-  ;;
-
-  let check_if_empty_backtrace raise_f =
-    with_backtraces_enabled (fun () ->
-      clear_backtrace ();
-      (* The call to [raise] installs a new saved backtrace.  Then, the call to [raise_f],
-         if it's [raise], should save a new, different backtrace, while if it's
-         [raise_without_backtrace], should clear the backtrace and then not install a new
-         one when raising. *)
-      let old_backtrace = try raise   Not_found      with Not_found      -> backtrace () in
-      assert (old_backtrace <> "");
-      let new_backtrace = try raise_f Test_exception with Test_exception -> backtrace () in
-      assert (new_backtrace <> old_backtrace);
-      new_backtrace = "");
-  ;;
-
-  let%test _ = not (check_if_empty_backtrace raise)
-  let%test _ = check_if_empty_backtrace raise_without_backtrace
-end)
-
-let%bench_module "raise" = (module struct
-
-  exception Test_exception
-
-  let nested_raise raise_f depth =
-    let rec loop d =
-      if d = 0
-      then raise_f Test_exception
-      else loop (d - 1) + 1
-    in
-    (fun () ->
-       try
-         ignore (loop depth : int)
-       with
-       | Test_exception -> ())
-  ;;
-
-  let depths = [ 0; 10; 100; 1000; 10_000 ]
-
-  let%bench_fun "raise" [@indexed depth = depths] = nested_raise raise depth
-
-  let%bench_fun "raise_without_backtrace" [@indexed depth = depths] =
-    nested_raise raise_without_backtrace  depth
-  ;;
-end)
-
 let initialize_module () =
   install_sexp_converters ();
   set_uncaught_exception_handler ();

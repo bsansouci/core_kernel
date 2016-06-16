@@ -3,7 +3,7 @@ module List = StdLabels.List
 open Sexplib
 open Sexplib.Conv
 open With_return
-open Result.Export
+open Core_result.Export
 open Hash_set_intf
 
 module Binable = Binable0
@@ -43,7 +43,7 @@ module Accessors = struct
     if mem t k then Or_error.error_string "element already exists"
     else begin
       Hashtbl.set t ~key:k ~data:();
-      Result.Ok ()
+      OcamlResult.Result.Ok ()
     end
   ;;
 
@@ -54,7 +54,7 @@ module Accessors = struct
   let strict_remove t k =
     if mem t k then begin
       remove t k;
-      Result.Ok ()
+      OcamlResult.Result.Ok ()
     end else
       Or_error.error "element not in set" k (Hashtbl.sexp_of_key t)
   ;;

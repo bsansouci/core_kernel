@@ -663,7 +663,7 @@ end = struct
 
 end
 
-open Ppx_hash_lib.Std.Hash.Builtin
+open Ppx_hash.Std.Hash.Builtin
 
 module Int_key = struct
   include Int

@@ -10,7 +10,7 @@ include Invariant.S1 with type 'a t := 'a t (** Passes when unset. *)
 
 val create : unit -> 'a t
 
-val set : 'a t -> 'a -> (unit, string) Result.t
+val set : 'a t -> 'a -> (unit, string) OcamlResult.Result.t
 val set_exn : 'a t -> 'a -> unit
 
 val get : 'a t -> 'a option

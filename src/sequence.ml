@@ -1016,8 +1016,8 @@ let%test _ =
 
 let fold_result t ~init ~f =
   delayed_fold t ~init
-    ~f:(fun acc x ~k -> Result.bind (f acc x) k)
-    ~finish:Result.return
+    ~f:(fun acc x ~k -> Core_result.bind (f acc x) k)
+    ~finish:Core_result.return
 
 let fold_until t ~init ~f =
   delayed_fold t ~init

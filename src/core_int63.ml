@@ -1,16 +1,9 @@
-#import "config.h"
 module type Int_or_more = sig
   include Int_intf.S
   val of_int : int -> t
   val to_int : t -> int option
 end
-#ifdef JSC_ARCH_SIXTYFOUR
-include
-  (struct include Core_int let to_int x = Some x end
-   : Int_or_more with type t = private int)
-#else
 include (Core_int63_emul : Int_or_more)
-#endif
 
 module Overflow_exn = struct
   let ( + ) t u =

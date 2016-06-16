@@ -202,8 +202,8 @@ val fold
 val fold_result
   :  ('a, _) t
   -> init:'accum
-  -> f:('accum -> 'a -> ('accum, 'e) Result.t)
-  -> ('accum, 'e) Result.t
+  -> f:('accum -> 'a -> ('accum, 'e) OcamlResult.Result.t)
+  -> ('accum, 'e) OcamlResult.Result.t
 
 (** [fold_until t ~init ~f] is a short-circuiting version of [fold]. If [f]
     returns [Stop _] the computation ceases and results in that value. If [f] returns

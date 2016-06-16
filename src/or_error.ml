@@ -1,16 +1,16 @@
 open Sexplib.Conv
-open Result.Export
+open Core_result.Export
 
 module Stable = struct
   module V1 = struct
-    type 'a t = ('a, Error.Stable.V1.t) Result.Stable.V1.t [@@deriving bin_io, compare, sexp]
+    type 'a t = ('a, Error.Stable.V1.t) Core_result.Stable.V1.t [@@deriving bin_io, compare, sexp]
 
-    let map x ~f = Result.Stable.V1.map x ~f1:f ~f2:Fn.id
+    let map x ~f = Core_result.Stable.V1.map x ~f1:f ~f2:Fn.id
   end
   module V2 = struct
-    type 'a t = ('a, Error.Stable.V2.t) Result.Stable.V1.t [@@deriving bin_io, compare, sexp]
+    type 'a t = ('a, Error.Stable.V2.t) Core_result.Stable.V1.t [@@deriving bin_io, compare, sexp]
 
-    let map x ~f = Result.Stable.V1.map x ~f1:f ~f2:Fn.id
+    let map x ~f = Core_result.Stable.V1.map x ~f1:f ~f2:Fn.id
   end
 end
 
@@ -18,7 +18,7 @@ end
    format, and we don't want to change this "unstable" format, which is in use.  We just
    introduced the stable format, so people haven't yet had the time to adjust code to use
    it. *)
-type 'a t = ('a, Error.t) Result.t [@@deriving bin_io, compare, sexp]
+type 'a t = ('a, Error.t) Core_result.t [@@deriving bin_io, compare, sexp]
 
 let invariant invariant_a t =
   match t with
@@ -28,15 +28,15 @@ let invariant invariant_a t =
 
 module List = Core_list
 
-include (Result : Monad.S2
-         with type ('a, 'b) t := ('a, 'b) Result.t
-         with module Let_syntax := Result.Let_syntax)
+include (Core_result : Monad.S2
+         with type ('a, 'b) t := ('a, 'b) Core_result.t
+         with module Let_syntax := Core_result.Let_syntax)
 
 include Applicative.Make (struct
     type nonrec 'a t = 'a t
     let return = return
     let apply f x =
-      Result.combine f x
+      Core_result.combine f x
         ~ok:(fun f x -> f x)
         ~err:(fun e1 e2 -> Error.of_list [e1; e2])
     let map = `Custom map
@@ -87,14 +87,14 @@ let errorf format = Printf.ksprintf error_string format
 
 let%test _ = errorf "foo %d" 13 = error_string "foo 13"
 
-let tag t ~tag = Result.map_error t ~f:(Error.tag ~tag)
+let tag t ~tag = Core_result.map_error t ~f:(Error.tag ~tag)
 let tag_arg t message a sexp_of_a =
-  Result.map_error t ~f:(fun e -> Error.tag_arg e message a sexp_of_a)
+  Core_result.map_error t ~f:(fun e -> Error.tag_arg e message a sexp_of_a)
 
 let unimplemented s = error "unimplemented" s [%sexp_of: string]
 
 let combine_errors l =
-  let ok, errs = List.partition_map l ~f:Result.ok_fst in
+  let ok, errs = List.partition_map l ~f:Core_result.ok_fst in
   match errs with
   | [] -> Ok ok
   | _ -> Error (Error.of_list errs)
@@ -104,11 +104,11 @@ let%test_unit _ =
     assert (combine_errors (List.init i ~f:(fun _ -> Ok ()))
             = Ok (List.init i ~f:(fun _ -> ())));
   done
-let%test _ = Result.is_error (combine_errors [ error_string "" ])
-let%test _ = Result.is_error (combine_errors [ Ok (); error_string "" ])
+let%test _ = Core_result.is_error (combine_errors [ error_string "" ])
+let%test _ = Core_result.is_error (combine_errors [ Ok (); error_string "" ])
 
 
-let combine_errors_unit l = Result.map (combine_errors l) ~f:(fun (_ : unit list) -> ())
+let combine_errors_unit l = Core_result.map (combine_errors l) ~f:(fun (_ : unit list) -> ())
 
 let%test _ = combine_errors_unit [Ok (); Ok ()] = Ok ()
 let%test _ = combine_errors_unit [] = Ok ()
@@ -119,13 +119,13 @@ let%test _ =
   | Error e -> Error.to_string_hum e = Error.to_string_hum (Error.of_list [a;b])
 
 let filter_ok_at_least_one l =
-  let ok, errs = List.partition_map l ~f:Result.ok_fst in
+  let ok, errs = List.partition_map l ~f:Core_result.ok_fst in
   match ok with
   | [] -> Error (Error.of_list errs)
   | _ -> Ok ok
 
 let find_ok l =
-  match List.find_map l ~f:Result.ok with
+  match List.find_map l ~f:Core_result.ok with
   | Some x -> Ok x
   | None ->
     Error (Error.of_list (List.map l ~f:(function

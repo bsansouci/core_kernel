@@ -2,7 +2,7 @@ open! Int_replace_polymorphic_compare
 module List = Core_list
 module String = StringLabels
 open Fieldslib
-open Result.Export
+open Core_result.Export
 open Sexplib.Conv
 
 (** Each single_error is a path indicating the location within the datastructure in

@@ -15,9 +15,9 @@ let sum (type a) ~fold (module M : Commutative_group.S with type t = a) t ~f =
 
 let fold_result ~fold ~init ~f t =
   with_return (fun {return} ->
-    Result.Ok (fold t ~init ~f:(fun acc item ->
+    OcamlResult.Result.Ok (fold t ~init ~f:(fun acc item ->
       match f acc item with
-      | Result.Ok x -> x
+      | OcamlResult.Result.Ok x -> x
       | Error _ as e -> return e)))
 ;;
 

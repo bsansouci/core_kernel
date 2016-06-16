@@ -647,55 +647,55 @@ module Priority_queue = struct
   ;;
 
   let invariant invariant_a t : unit =
-    let pool = t.pool in
-    let level_invariant level =
-      Invariant.invariant [%here] level [%sexp_of: _ Level.t] (fun () ->
-        let check f = Invariant.check_field level f in
-        Level.Fields.iter
-          ~index:(check (fun index -> assert (index >= 0)))
-          ~bits:(check (fun bits -> assert (Num_key_bits.( > ) bits Num_key_bits.zero)))
-          ~slots_mask:(check ([%test_result: Slots_mask.t]
-                                ~expect:(Slots_mask.create ~level_bits:level.bits)))
-          ~bits_per_slot:(check (fun bits_per_slot ->
-            assert (Num_key_bits.( >= ) bits_per_slot Num_key_bits.zero)))
-          ~keys_per_slot:(check (fun keys_per_slot ->
-            [%test_result: Key.Span.t] keys_per_slot
-              ~expect:(Key.num_keys level.bits_per_slot)))
-          ~min_key_in_same_slot_mask:(check (fun min_key_in_same_slot_mask ->
-            assert (min_key_in_same_slot_mask
-                    = Min_key_in_same_slot_mask.create
-                        ~bits_per_slot:level.bits_per_slot)))
-          ~num_allowed_keys:(check (fun num_allowed_keys ->
-            [%test_result: Key.Span.t] num_allowed_keys
-              ~expect:(Key.Span.scale_int level.keys_per_slot (Level.num_slots level))))
-          ~length:(check (fun length ->
-            assert (length
-                    = Array.fold level.slots ~init:0 ~f:(fun n elt ->
-                      if Internal_elt.is_null elt
-                      then n
-                      else n + Internal_elt.length pool elt))))
-          ~min_allowed_key:(check (fun min_allowed_key ->
-            assert (Key.( >= ) min_allowed_key Key.zero);
-            [%test_result: Key.Span.t]
-              (Key.rem min_allowed_key level.keys_per_slot)
-              ~expect:Key.Span.zero))
-          ~max_allowed_key:
-            (check (fun max_allowed_key ->
-               [%test_result: Key.t] max_allowed_key
-                 ~expect:(Key.add level.min_allowed_key
-                            (Key.Span.pred level.num_allowed_keys))))
-          ~slots:(check (fun slots ->
-            Array.iter slots ~f:(fun elt ->
-              if not (Internal_elt.is_null elt)
-              then (
-                Internal_elt.invariant pool invariant_a elt;
-                Internal_elt.iter pool elt ~f:(fun elt ->
-                  assert (Internal_elt.key pool elt >= level.min_allowed_key);
-                  assert (Internal_elt.key pool elt <= level.max_allowed_key);
-                  assert (Internal_elt.key pool elt >= t.elt_key_lower_bound);
-                  assert (Internal_elt.level_index pool elt = level.index);
-                  invariant_a (Internal_elt.value pool elt)))))))
-    in
+    (* let pool = t.pool in *)
+  (*   let level_invariant level = *)
+  (*     Invariant.invariant [%here] level [%sexp_of: _ Level.t] (fun () -> *)
+  (*       let check f = Invariant.check_field level f in *)
+  (*       Level.Fields.iter *)
+  (*         ~index:(check (fun index -> assert (index >= 0))) *)
+  (*         ~bits:(check (fun bits -> assert (Num_key_bits.( > ) bits Num_key_bits.zero))) *)
+  (*         ~slots_mask:(check ([%test_result: Slots_mask.t] *)
+  (*                               ~expect:(Slots_mask.create ~level_bits:level.bits))) *)
+  (*         ~bits_per_slot:(check (fun bits_per_slot -> *)
+  (*           assert (Num_key_bits.( >= ) bits_per_slot Num_key_bits.zero))) *)
+  (*         ~keys_per_slot:(check (fun keys_per_slot -> *)
+  (*           [%test_result: Key.Span.t] keys_per_slot *)
+  (*             ~expect:(Key.num_keys level.bits_per_slot))) *)
+  (*         ~min_key_in_same_slot_mask:(check (fun min_key_in_same_slot_mask -> *)
+  (*           assert (min_key_in_same_slot_mask *)
+  (*                   = Min_key_in_same_slot_mask.create *)
+  (*                       ~bits_per_slot:level.bits_per_slot))) *)
+  (*         ~num_allowed_keys:(check (fun num_allowed_keys -> *)
+  (*           [%test_result: Key.Span.t] num_allowed_keys *)
+  (*             ~expect:(Key.Span.scale_int level.keys_per_slot (Level.num_slots level)))) *)
+  (*         ~length:(check (fun length -> *)
+  (*           assert (length *)
+  (*                   = Array.fold level.slots ~init:0 ~f:(fun n elt -> *)
+  (*                     if Internal_elt.is_null elt *)
+  (*                     then n *)
+  (*                     else n + Internal_elt.length pool elt)))) *)
+  (*         ~min_allowed_key:(check (fun min_allowed_key -> *)
+  (*           assert (Key.( >= ) min_allowed_key Key.zero); *)
+  (*           [%test_result: Key.Span.t] *)
+  (*             (Key.rem min_allowed_key level.keys_per_slot) *)
+  (*             ~expect:Key.Span.zero)) *)
+  (*         ~max_allowed_key: *)
+  (*           (check (fun max_allowed_key -> *)
+  (*              [%test_result: Key.t] max_allowed_key *)
+  (*                ~expect:(Key.add level.min_allowed_key *)
+  (*                           (Key.Span.pred level.num_allowed_keys)))) *)
+  (*         ~slots:(check (fun slots -> *)
+  (*           Array.iter slots ~f:(fun elt -> *)
+  (*             if not (Internal_elt.is_null elt) *)
+  (*             then ( *)
+  (*               Internal_elt.invariant pool invariant_a elt; *)
+  (*               Internal_elt.iter pool elt ~f:(fun elt -> *)
+  (*                 assert (Internal_elt.key pool elt >= level.min_allowed_key); *)
+  (*                 assert (Internal_elt.key pool elt <= level.max_allowed_key); *)
+  (*                 assert (Internal_elt.key pool elt >= t.elt_key_lower_bound); *)
+  (*                 assert (Internal_elt.level_index pool elt = level.index); *)
+  (*                 invariant_a (Internal_elt.value pool elt))))))) *)
+  (*   in *)
     Invariant.invariant [%here] t [%sexp_of: _ t_internal] (fun () ->
       let check f = Invariant.check_field t f in
       assert (min_allowed_key t >= Key.zero);
@@ -720,13 +720,13 @@ module Priority_queue = struct
           assert (num_levels t > 0);
           Array.iteri levels ~f:(fun level_index level ->
             assert (level_index = Level.index level);
-            level_invariant level;
+            (* level_invariant level; *)
             if level_index > 0
             then (
               let prev_level = levels.( level_index - 1 ) in
               let module L = Level in
-              [%test_result: Key.Span.t]
-                (L.keys_per_slot level) ~expect:(L.num_allowed_keys prev_level);
+              (* [%test_result: Key.Span.t] *)
+              (*   (L.keys_per_slot level) ~expect:(L.num_allowed_keys prev_level); *)
               let bound = Key.succ (L.max_allowed_key prev_level) in
               assert (L.min_allowed_key level <= bound);
               assert (Key.( > )
@@ -1342,19 +1342,19 @@ let invariant invariant_a t =
       ~start:(check (fun start ->
         assert (Time_ns.( >= ) start min_time);
         assert (Time_ns.( <= ) start max_time)))
-      ~max_interval_num:(check (fun max_interval_num ->
-        [%test_result: Interval_num.t] ~expect:max_interval_num (interval_num t max_time);
-        [%test_result: Interval_num.t] ~expect:max_interval_num
-          (interval_num t (interval_num_start t max_interval_num))))
+      ~max_interval_num:(check (fun max_interval_num -> ()
+        (* [%test_result: Interval_num.t] ~expect:max_interval_num (interval_num t max_time); *)
+        (* [%test_result: Interval_num.t] ~expect:max_interval_num
+          (interval_num t (interval_num_start t max_interval_num)) *)))
       ~now:(check (fun now ->
         assert (Time_ns.( >= ) now t.start);
         assert (Time_ns.( <= ) now max_time);
         assert (interval_num t t.now = Priority_queue.min_allowed_key t.priority_queue)))
-      ~now_interval_num_start:(check (fun now_interval_num_start ->
-        [%test_result: Time_ns.t] now_interval_num_start
-          ~expect:(interval_num_start t (now_interval_num t))))
-      ~alarm_upper_bound:(check (fun alarm_upper_bound ->
-        [%test_result: Time_ns.t] alarm_upper_bound ~expect:(compute_alarm_upper_bound t)))
+      ~now_interval_num_start:(check (fun now_interval_num_start -> ()
+        (* [%test_result: Time_ns.t] now_interval_num_start
+          ~expect:(interval_num_start t (now_interval_num t))*)))
+      ~alarm_upper_bound:(check (fun alarm_upper_bound -> ()
+        (* [%test_result: Time_ns.t] alarm_upper_bound ~expect:(compute_alarm_upper_bound t)*)))
       ~priority_queue:(check (Priority_queue.invariant invariant_a));
     iter t ~f:(fun alarm ->
       assert (Alarm.interval_num t alarm = interval_num t (Alarm.at t alarm));

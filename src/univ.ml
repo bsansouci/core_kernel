@@ -60,6 +60,6 @@ let%test_module _ = (module struct
   let%test _ = Option.is_none (match_ t1 c2)
 
   let%test _ = match_exn t1 c1 = 13
-  let%test _ = Result.is_error (Result.try_with (fun () -> match_exn t1 c2))
+  let%test _ = OcamlResult.Result.is_error (Result.try_with (fun () -> match_exn t1 c2))
 
 end)

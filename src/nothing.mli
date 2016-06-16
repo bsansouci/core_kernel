@@ -28,7 +28,7 @@ type t = Nothing0.t [@@deriving enumerate]
     use [unreachable_code] to give the code whatever type one needs.  For example:
 
     {[
-      let f (r : (int, Nothing.t) Result.t) : int =
+      let f (r : (int, Nothing.t) OcamlResult.Result.t) : int =
         match r with
         | Ok i -> i
         | Error n -> Nothing.unreachable_code n

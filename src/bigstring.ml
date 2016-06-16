@@ -1,5 +1,3 @@
-#import "config.h"
-
 open Std_internal
 open Bigarray
 
@@ -25,7 +23,7 @@ let create ?max_mem_waiting_gc size =
   if size < 0 then invalid_argf "create: size = %d < 0" size ();
   aux_create ~max_mem_waiting_gc ~size
 
-let%test "create with different max_mem_waiting_gc" [@tags "no-js"] =
+let%test "create with different max_mem_waiting_gc" =
   Core_gc.full_major ();
   let module Alarm = Core_gc.Expert.Alarm in
   let count_gc_cycles mem_units =
@@ -467,39 +465,6 @@ let unsafe_write_int64_swap t ~pos x  = unsafe_set_64 t pos (swap64 x)
 let unsafe_write_int64_int t ~pos x       = unsafe_set_64 t pos (int64_of_int x)
 let unsafe_write_int64_int_swap t ~pos x  = unsafe_set_64 t pos (swap64 (int64_of_int x))
 
-#ifdef JSC_ARCH_BIG_ENDIAN
-
-let unsafe_get_int16_be  = unsafe_read_int16
-let unsafe_get_int16_le  = unsafe_read_int16_swap
-let unsafe_get_uint16_be = unsafe_read_uint16
-let unsafe_get_uint16_le = unsafe_read_uint16_swap
-
-let unsafe_set_int16_be  = unsafe_write_int16
-let unsafe_set_int16_le  = unsafe_write_int16_swap
-let unsafe_set_uint16_be = unsafe_write_uint16
-let unsafe_set_uint16_le = unsafe_write_uint16_swap
-
-let unsafe_get_int32_t_be  = unsafe_read_int32
-let unsafe_get_int32_t_le  = unsafe_read_int32_swap
-let unsafe_set_int32_t_be  = unsafe_write_int32
-let unsafe_set_int32_t_le  = unsafe_write_int32_swap
-
-let unsafe_get_int32_be  = unsafe_read_int32_int
-let unsafe_get_int32_le  = unsafe_read_int32_int_swap
-let unsafe_set_int32_be  = unsafe_write_int32_int
-let unsafe_set_int32_le  = unsafe_write_int32_int_swap
-
-let unsafe_get_int64_be_trunc = unsafe_read_int64_int
-let unsafe_get_int64_le_trunc = unsafe_read_int64_int_swap
-let unsafe_set_int64_be       = unsafe_write_int64_int
-let unsafe_set_int64_le       = unsafe_write_int64_int_swap
-
-let unsafe_get_int64_t_be  = unsafe_read_int64
-let unsafe_get_int64_t_le  = unsafe_read_int64_swap
-let unsafe_set_int64_t_be  = unsafe_write_int64
-let unsafe_set_int64_t_le  = unsafe_write_int64_swap
-
-#else
 
 let unsafe_get_int16_be  = unsafe_read_int16_swap
 let unsafe_get_int16_le  = unsafe_read_int16
@@ -531,7 +496,6 @@ let unsafe_get_int64_t_le  = unsafe_read_int64
 let unsafe_set_int64_t_be  = unsafe_write_int64_swap
 let unsafe_set_int64_t_le  = unsafe_write_int64
 
-#endif
 
 let int64_conv_error () =
   failwith "unsafe_read_int64: value cannot be represented unboxed!"
@@ -541,23 +505,6 @@ let uint64_conv_error () =
   failwith "unsafe_read_uint64: value cannot be represented unboxed!"
 ;;
 
-#ifdef JSC_ARCH_SIXTYFOUR
-
-let int64_to_int_exn n =
-  if n >= -0x4000_0000_0000_0000L && n < 0x4000_0000_0000_0000L then
-    int64_to_int n
-  else
-    int64_conv_error ()
-;;
-
-let uint64_to_int_exn n =
-  if n >= 0L && n < 0x4000_0000_0000_0000L then
-    int64_to_int n
-  else
-    uint64_conv_error ()
-;;
-
-#else
 
 let int64_to_int_exn n =
   if n >= -0x0000_0000_4000_0000L && n < 0x0000_0000_4000_0000L then
@@ -573,7 +520,6 @@ let uint64_to_int_exn n =
     uint64_conv_error ()
 ;;
 
-#endif
 
 let unsafe_get_int64_be_exn t ~pos = int64_to_int_exn (unsafe_get_int64_t_be t ~pos)
 let unsafe_get_int64_le_exn t ~pos = int64_to_int_exn (unsafe_get_int64_t_le t ~pos)
@@ -661,58 +607,6 @@ let%test_module "binary accessors" = (module struct
     [0; 1; 65535]
 
 
-#ifdef JSC_ARCH_SIXTYFOUR
-
-  let%test _ = test_accessor ~buf Int.to_string
-    ~fget:unsafe_get_int32_le
-    ~fset:unsafe_set_int32_le
-    [Int64.to_int_exn (-2147483648L); -1; 0; 1; Int64.to_int_exn 2147483647L]
-
-  let%test _ = test_accessor ~buf Int.to_string
-    ~fget:unsafe_get_int32_be
-    ~fset:unsafe_set_int32_be
-    [Int64.to_int_exn (-2147483648L); -1; 0; 1; Int64.to_int_exn 2147483647L]
-
-  let%test _ = test_accessor ~buf Int.to_string
-    ~fget:unsafe_get_int64_le_exn
-    ~fset:unsafe_set_int64_le
-    [Int64.to_int_exn (-2147483648L); -1; 0; 1; Int64.to_int_exn 2147483647L]
-
-  let%test _ = test_accessor ~buf Int.to_string
-    ~fget:unsafe_get_int64_be_exn
-    ~fset:unsafe_set_int64_be
-    [Int64.to_int_exn (-0x4000_0000_0000_0000L);
-     Int64.to_int_exn (-2147483648L); -1; 0; 1; Int64.to_int_exn 2147483647L;
-     Int64.to_int_exn 0x3fff_ffff_ffff_ffffL]
-
-  let%test _ =
-    List.for_all
-      [ unsafe_get_uint64_be_exn, unsafe_set_uint64_be
-      ; unsafe_get_uint64_le_exn, unsafe_set_uint64_le
-      ]
-      ~f:(fun (fget, fset) ->
-        test_accessor ~buf Int.to_string
-          ~fget ~fset
-          ([ 0L
-           ; 1L
-           ; 0xffff_ffffL
-           ; 0x3fff_ffff_ffff_ffffL ]
-          |> List.map ~f:Int64.to_int_exn))
-
-  let%test_unit _ =
-    List.iter
-      [ "\x40\x00\x00\x00\x00\x00\x00\x00"
-      ; "\x80\x00\x00\x00\x00\x00\x00\x00"
-      ; "\xA0\x00\x00\x00\x00\x00\x00\x00"
-      ; "\xF0\x00\x00\x00\x00\x00\x00\x00"
-      ; "\x4F\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
-      ; "\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF"
-      ] ~f:(fun string ->
-    assert (Exn.does_raise (fun () -> unsafe_get_uint64_be_exn ~pos:0 (of_string string)));
-    assert (Exn.does_raise (fun () -> unsafe_get_uint64_le_exn ~pos:0
-                                        (of_string (String.rev string)))))
-
-#endif (* ARCH_SIXTYFOUR *)
 
   let%test _ = test_accessor ~buf Int64.to_string
     ~fget:unsafe_get_int64_t_le

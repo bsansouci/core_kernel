@@ -35,7 +35,7 @@ val slice
     v}
  *)
 
-val get_pos_len     : ?pos:int -> ?len:int -> length:int -> (int * int, string) Result.t
+val get_pos_len     : ?pos:int -> ?len:int -> length:int -> (int * int, string) OcamlResult.Result.t
 val get_pos_len_exn : ?pos:int -> ?len:int -> length:int -> int * int
 
 (** [check_pos_len_exn ~pos ~len ~length] raises unless

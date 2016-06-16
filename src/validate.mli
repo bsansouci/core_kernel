@@ -125,8 +125,8 @@ val field_direct_folder
 (** Combine a list of validation functions into one that does all validations. *)
 val all : 'a check list -> 'a check
 
-(** Create a validation function from a function that produces a Result.t *)
-val of_result : ('a -> (unit, string) Result.t) -> 'a check
+(** Create a validation function from a function that produces a OcamlResult.Result.t *)
+val of_result : ('a -> (unit, string) OcamlResult.Result.t) -> 'a check
 
 val of_error : ('a -> unit Or_error.t) -> 'a check
 

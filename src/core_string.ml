@@ -28,7 +28,7 @@ module List = Core_list
 open Typerep_lib.Std
 open Sexplib.Std
 open Bin_prot.Std
-open Result.Export
+open Core_result.Export
 open Staged
 
 let phys_equal = (==)

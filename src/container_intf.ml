@@ -50,8 +50,8 @@ module type S0 = sig
   val fold_result
     :  t
     -> init:'accum
-    -> f:('accum -> elt -> ('accum, 'e) Result.t)
-    -> ('accum, 'e) Result.t
+    -> f:('accum -> elt -> ('accum, 'e) OcamlResult.Result.t)
+    -> ('accum, 'e) OcamlResult.Result.t
 
   (** [fold_until t ~init ~f] is a short-circuiting version of [fold]. If [f]
       returns [Stop _] the computation ceases and results in that value. If [f] returns
@@ -120,8 +120,8 @@ module type S0_phantom = sig
   val fold_result
     :  _ t
     -> init:'accum
-    -> f:('accum -> elt -> ('accum, 'e) Result.t)
-    -> ('accum, 'e) Result.t
+    -> f:('accum -> elt -> ('accum, 'e) OcamlResult.Result.t)
+    -> ('accum, 'e) OcamlResult.Result.t
 
   (** [fold_until t ~init ~f] is a short-circuiting version of [fold]. If [f]
       returns [Stop _] the computation ceases and results in that value. If [f] returns
@@ -189,8 +189,8 @@ module type S1 = sig
   val fold_result
     :  'a t
     -> init:'accum
-    -> f:('accum -> 'a -> ('accum, 'e) Result.t)
-    -> ('accum, 'e) Result.t
+    -> f:('accum -> 'a -> ('accum, 'e) OcamlResult.Result.t)
+    -> ('accum, 'e) OcamlResult.Result.t
 
   (** [fold_until t ~init ~f] is a short-circuiting version of [fold]. If [f]
       returns [Stop _] the computation ceases and results in that value. If [f] returns
@@ -256,8 +256,8 @@ module type S1_phantom_invariant = sig
   val fold_result
     :  ('a, _) t
     -> init:'accum
-    -> f:('accum -> 'a -> ('accum, 'e) Result.t)
-    -> ('accum, 'e) Result.t
+    -> f:('accum -> 'a -> ('accum, 'e) OcamlResult.Result.t)
+    -> ('accum, 'e) OcamlResult.Result.t
 
   (** [fold_until t ~init ~f] is a short-circuiting version of [fold]. If [f]
       returns [Stop _] the computation ceases and results in that value. If [f] returns
@@ -328,8 +328,8 @@ module type S1_permissions = sig
   val fold_result
     :  ('a, [> read]) t
     -> init:'accum
-    -> f:('accum -> 'a -> ('accum, 'e) Result.t)
-    -> ('accum, 'e) Result.t
+    -> f:('accum -> 'a -> ('accum, 'e) OcamlResult.Result.t)
+    -> ('accum, 'e) OcamlResult.Result.t
 
   (** [fold_until t ~init ~f] is a short-circuiting version of [fold]. If [f]
       returns [Stop _] the computation ceases and results in that value. If [f] returns
@@ -385,8 +385,8 @@ module type Generic = sig
   val fold_result
     :  'a t
     -> init:'accum
-    -> f:('accum -> 'a elt -> ('accum, 'e) Result.t)
-    -> ('accum, 'e) Result.t
+    -> f:('accum -> 'a elt -> ('accum, 'e) OcamlResult.Result.t)
+    -> ('accum, 'e) OcamlResult.Result.t
 
   val fold_until
     :  'a t
@@ -419,8 +419,8 @@ module type Generic_phantom = sig
   val fold_result
     :  ('a, _) t
     -> init:'accum
-    -> f:('accum -> 'a elt -> ('accum, 'e) Result.t)
-    -> ('accum, 'e) Result.t
+    -> f:('accum -> 'a elt -> ('accum, 'e) OcamlResult.Result.t)
+    -> ('accum, 'e) OcamlResult.Result.t
   val fold_until
     :  ('a, _) t
     -> init:'accum
@@ -506,9 +506,9 @@ module type Container = sig
   val fold_result
     :  fold:('t, 'a, 'b) fold
     -> init:'b
-    -> f:('b -> 'a -> ('b, 'e) Result.t)
+    -> f:('b -> 'a -> ('b, 'e) OcamlResult.Result.t)
     -> 't
-    -> ('b, 'e) Result.t
+    -> ('b, 'e) OcamlResult.Result.t
 
   val fold_until
     :  fold:('t, 'a, 'b) fold

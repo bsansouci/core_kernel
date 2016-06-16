@@ -145,7 +145,7 @@ module Id = struct
     let%test _ = Option.is_none (same_witness t1 t2)
 
     let%test_unit _ = ignore (same_witness_exn t1 t1 : (_, _) equal)
-    let%test _ = Result.is_error (Result.try_with (fun () -> same_witness_exn t1 t2))
+    let%test _ = OcamlResult.Result.is_error (Result.try_with (fun () -> same_witness_exn t1 t2))
   end)
 end
 

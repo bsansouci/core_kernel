@@ -394,9 +394,9 @@ let%test_module _ = (module struct
 
   let%test _ = is_empty (create ~num_keys:1)
 
-  let%test _ = Result.is_ok (of_alist [ ])
-  let%test _ = Result.is_ok (of_alist [ (1, 1) ])
-  let%test _ = Result.is_error (of_alist [ (1, 1); (1, 2) ])
+  let%test _ = OcamlResult.Result.is_ok (of_alist [ ])
+  let%test _ = OcamlResult.Result.is_ok (of_alist [ (1, 1) ])
+  let%test _ = OcamlResult.Result.is_error (of_alist [ (1, 1); (1, 2) ])
 
   let%test _ = is_empty (of_alist_exn [])
 
