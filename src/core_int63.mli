@@ -13,7 +13,11 @@
     omit caml_modify when dealing with record fields holding [Int63.t].
     Code should not explicitly make use of the [private], e.g. via [(i :> int)], since
     such code will not compile on 32-bit platforms. *)
+#ifdef JSC_ARCH_SIXTYFOUR
+include Int_intf.S with type t = private int
+#else
 include Int_intf.S
+#endif
 
 (** Unlike the usual operations, these never overflow, preferring instead to raise. *)
 module Overflow_exn : sig

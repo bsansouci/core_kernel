@@ -129,8 +129,15 @@ end = struct
   let to_int_ms   t = Int63.(to_int_exn (t / millisecond))
   let to_int_sec  t = Int63.(to_int_exn (t / second))
 
+#ifdef JSC_ARCH_SIXTYFOUR
+  let%test _ = Int.(>) (to_int_sec Int63.max_value) 0 (* and doesn't raise *)
+
+  let of_int_ns i = of_int63_ns (Int63.of_int i)
+  let to_int_ns t = Int63.to_int_exn (to_int63_ns t)
+#else
   let of_int_ns _i = failwith "unsupported on 32bit machines"
   let to_int_ns _i = failwith "unsupported on 32bit machines"
+#endif
 
   let (+)         t u = Int63.(+) t u
   let (-)         t u = Int63.(-) t u
@@ -337,10 +344,19 @@ end = struct
   let (<>.) t u = Int63.(abs (t - u)) > epsilon
   let robustly_compare t u = if t <. u then -1 else if t >. u then 1 else 0
 
+#ifdef JSC_ARCH_SIXTYFOUR
+  external since_unix_epoch_or_zero : unit -> t
+    = "core_kernel_time_ns_gettime_or_zero" "noalloc"
+#else
   external since_unix_epoch_or_zero : unit -> t
     = "core_kernel_time_ns_gettime_or_zero"
+#endif
 
+#ifdef JSC_POSIX_TIMERS
+  let gettime_failed () = failwith "clock_gettime(CLOCK_REALTIME) failed"
+#else
   let gettime_failed () = failwith "gettimeofday failed"
+#endif
 
   let since_unix_epoch () =
     let t = since_unix_epoch_or_zero () in
@@ -385,8 +401,13 @@ let of_span_since_epoch s = s
 let to_int63_ns_since_epoch t = Span.to_int63_ns (to_span_since_epoch t)
 let of_int63_ns_since_epoch i = of_span_since_epoch (Span.of_int63_ns i)
 
+#ifdef JSC_ARCH_SIXTYFOUR
+let to_int_ns_since_epoch t = Int63.to_int_exn (to_int63_ns_since_epoch t)
+let of_int_ns_since_epoch i = of_int63_ns_since_epoch (Int63.of_int i)
+#else
 let to_int_ns_since_epoch _t = failwith "unsupported on 32bit machines"
 let of_int_ns_since_epoch _i = failwith "unsupported on 32bit machines"
+#endif
 
 let next_multiple ?(can_equal_after = false) ~base ~after ~interval () =
   if Span.(<=) interval Span.zero

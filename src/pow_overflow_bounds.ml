@@ -75,6 +75,87 @@ let int32_positive_overflow_bounds : int32 array =
   |]
 
 
+#ifdef JSC_ARCH_SIXTYFOUR
+
+let overflow_bound_max_int_value : int =
+  if Int_conversions.num_bits_int = 32 then
+    Int32.to_int overflow_bound_max_int32_value
+  else
+    Int64.to_int 4611686018427387903L
+
+let int_positive_overflow_bounds : int array =
+  if Int_conversions.num_bits_int = 32 then
+    Array.map Int32.to_int int32_positive_overflow_bounds
+  else
+    [|
+      Int64.to_int 4611686018427387903L;
+      Int64.to_int 4611686018427387903L;
+      Int64.to_int 2147483647L;
+      1664510;
+      46340;
+      5404;
+      1290;
+      463;
+      215;
+      118;
+      73;
+      49;
+      35;
+      27;
+      21;
+      17;
+      14;
+      12;
+      10;
+      9;
+      8;
+      7;
+      7;
+      6;
+      5;
+      5;
+      5;
+      4;
+      4;
+      4;
+      4;
+      3;
+      3;
+      3;
+      3;
+      3;
+      3;
+      3;
+      3;
+      3;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      2;
+      1;
+      1;
+  |]
+
+#else
+
 let overflow_bound_max_int_value : int =
   if Int_conversions.num_bits_int = 32 then
     Int32.to_int overflow_bound_max_int32_value
@@ -151,6 +232,8 @@ let int_positive_overflow_bounds : int array =
       1;
       1;
   |]
+
+#endif
 
 
 let overflow_bound_max_int63_on_int64_value : int64 =
