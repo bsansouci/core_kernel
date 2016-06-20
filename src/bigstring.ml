@@ -557,6 +557,21 @@ let uint64_to_int_exn n =
 ;;
 
 #else
+let int64_to_int_exn n =
+  if n >= -0x0000_0000_4000_0000L && n < 0x0000_0000_4000_0000L then
+    int64_to_int n
+  else
+    int64_conv_error ()
+;;
+
+let uint64_to_int_exn n =
+  if n >= 0L && n < 0x0000_0000_4000_0000L then
+    int64_to_int n
+  else
+    uint64_conv_error ()
+;;
+
+#endif
 
 let unsafe_get_int64_be_exn t ~pos = int64_to_int_exn (unsafe_get_int64_t_be t ~pos)
 let unsafe_get_int64_le_exn t ~pos = int64_to_int_exn (unsafe_get_int64_t_le t ~pos)
@@ -696,7 +711,6 @@ let%test_module "binary accessors" = (module struct
 
 #endif 
 
-
   let%test _ = test_accessor ~buf Int64.to_string
     ~fget:unsafe_get_int64_t_le
     ~fset:unsafe_set_int64_t_le
@@ -771,6 +785,7 @@ let%test_module "binary accessors" = (module struct
             , e
             )
             [%sexp_of: string * string * exn])
+
 let%test_unit "unsafe_get_int64_le" =
     test_int64
       unsafe_get_int64_le_exn
