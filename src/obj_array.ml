@@ -103,7 +103,7 @@ let unsafe_clear_if_pointer t i =
 
 (** [unsafe_blit] is like [Array.blit], except it uses our own for-loop to avoid
     caml_modify when possible.  Its performance is still not comparable to a memcpy. *)
-let unsafe_blit ~src ~src_pos ~dst ~dst_pos ~len =
+(* let unsafe_blit ~src ~src_pos ~dst ~dst_pos ~len =
   (* When [phys_equal src dst], we need to check whether [dst_pos < src_pos] and have the
      for loop go in the right direction so that we don't overwrite data that we still need
      to read.  When [not (phys_equal src dst)], doing this is harmless.  From a
@@ -120,7 +120,7 @@ let unsafe_blit ~src ~src_pos ~dst ~dst_pos ~len =
     for i = len - 1 downto 0 do
       unsafe_set dst (dst_pos + i) (unsafe_get src (src_pos + i))
     done;
-;;
+;; *)
 
 include
   Blit.Make
@@ -135,7 +135,7 @@ include
       let get = get
       let set = set
       let length = length
-      let unsafe_blit = unsafe_blit
+      (* let unsafe_blit = unsafe_blit *)
     end)
 ;;
 

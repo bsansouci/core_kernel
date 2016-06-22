@@ -76,18 +76,18 @@ module type S = sig
     with type Elt.comparator_witness = comparator_witness
 end
 
-(* module type Map_and_set_binable = sig
+module type Map_and_set = sig
   type t
   include Comparator.S with type t := t
-  module Map : Core_map.S_binable
+  module Map : Core_map.S
     with type Key.t = t
     with type Key.comparator_witness = comparator_witness
-  module Set : Core_set.S_binable
+  module Set : Core_set.S
     with type Elt.t = t
     with type Elt.comparator_witness = comparator_witness
 end
 
-module type S_binable = sig
+(* module type S_binable = sig
   include S_common
   include Map_and_set_binable
     with type t := t

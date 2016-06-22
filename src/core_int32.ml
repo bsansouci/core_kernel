@@ -76,7 +76,7 @@ end
 include Replace_polymorphic_compare
 
 include Hashable.Make (T)
-include Comparable.S (T)
+include Comparable.Map_and_set (T)
 
 let ( / ) = div
 let ( * ) = mul

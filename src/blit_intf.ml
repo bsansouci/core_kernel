@@ -41,7 +41,7 @@ module type S = sig
   type t
   val blit        : (t, t) blit
   val blito       : (t, t) blito
-  val unsafe_blit : (t, t) blit
+  (* val unsafe_blit : (t, t) blit *)
   val sub         : (t, t) sub
   val subo        : (t, t) subo
 end
@@ -51,7 +51,7 @@ module type S_permissions = sig
   type -'perms t
   val blit        : ([> read] t, [>   write] t) blit
   val blito       : ([> read] t, [>   write] t) blito
-  val unsafe_blit : ([> read] t, [>   write] t) blit
+  (* val unsafe_blit : ([> read] t, [>   write] t) blit *)
   val sub         : ([> read] t, [< _ perms] t) sub
   val subo        : ([> read] t, [< _ perms] t) subo
 end
@@ -60,7 +60,7 @@ module type S1 = sig
   type 'a t
   val blit        : ('a t, 'a t) blit
   val blito       : ('a t, 'a t) blito
-  val unsafe_blit : ('a t, 'a t) blit
+  (* val unsafe_blit : ('a t, 'a t) blit *)
   val sub         : ('a t, 'a t) sub
   val subo        : ('a t, 'a t) subo
 end
@@ -70,7 +70,7 @@ module type S1_permissions = sig
   type ('a, -'perms) t
   val blit        : (('a, [> read]) t, ('a, [>   write]) t) blit
   val blito       : (('a, [> read]) t, ('a, [>   write]) t) blito
-  val unsafe_blit : (('a, [> read]) t, ('a, [>   write]) t) blit
+  (* val unsafe_blit : (('a, [> read]) t, ('a, [>   write]) t) blit *)
   val sub         : (('a, [> read]) t, ('a, [< _ perms]) t) sub
   val subo        : (('a, [> read]) t, ('a, [< _ perms]) t) subo
 end
@@ -80,7 +80,7 @@ module type S_distinct = sig
   type dst
   val blit        : (src, dst) blit
   val blito       : (src, dst) blito
-  val unsafe_blit : (src, dst) blit
+  (* val unsafe_blit : (src, dst) blit *)
   val sub         : (src, dst) sub
   val subo        : (src, dst) subo
 end
@@ -132,7 +132,7 @@ module type Sequence1 = sig
   val get : 'a z t -> int -> 'a elt
   val set : 'a z t -> int -> 'a elt -> unit
 
-  val unsafe_blit : ('a t, 'a t) blit
+  (* val unsafe_blit : ('a t, 'a t) blit *)
 end
 
 module type Blit = sig
@@ -171,7 +171,7 @@ module type Blit = sig
       (Elt : Elt)
       (Sequence : sig
          include Sequence with type elt := Elt.t
-         val unsafe_blit : (t, t) blit
+         (* val unsafe_blit : (t, t) blit *)
        end)
     : S with type t := Sequence.t
 
@@ -181,7 +181,7 @@ module type Blit = sig
       (Src : Sequence with type elt := Elt.t)
       (Dst : sig
          include Sequence with type elt := Elt.t
-         val unsafe_blit : (Src.t, t) blit
+         (* val unsafe_blit : (Src.t, t) blit *)
        end)
     : S_distinct
       with type src := Src.t

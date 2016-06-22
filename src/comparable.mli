@@ -1,7 +1,7 @@
 open Comparable_intf
 
 module type Infix               = Infix
-(* module type Map_and_set_binable = Map_and_set_binable *)
+module type Map_and_set         = Map_and_set
 module type S                   = S
 (* module type S_binable           = S_binable *)
 module type S_common            = S_common
@@ -84,17 +84,17 @@ end) : S_binable with type t := T.t *)
   with type t := T.t
   with type comparator_witness := T.comparator_witness *)
 
-(* module Map_and_set_binable (T : sig type t [@@deriving compare, sexp] end)
-  : Map_and_set_binable with type t := T.t *)
+module Map_and_set (T : sig type t [@@deriving compare, sexp] end)
+  : Map_and_set with type t := T.t
 
-(* module Map_and_set_binable_using_comparator
+module Map_and_set_using_comparator
     (T : sig
        type t [@@deriving compare, sexp]
        include Comparator.S with type t := t
      end)
-  : Map_and_set_binable
+  : Map_and_set
     with type t := T.t
-    with type comparator_witness := T.comparator_witness *)
+    with type comparator_witness := T.comparator_witness
 
 module Poly (T : sig type t [@@deriving sexp] end) : S with type t := T.t
 

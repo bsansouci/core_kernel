@@ -474,7 +474,7 @@ let front_index_exn t =
   apparent_front_index_when_not_empty t
 ;;
 
-(* module Binary_searchable = Binary_searchable.Make1 (struct
+module Binary_searchable = Binary_searchable.Make1 (struct
   type nonrec 'a t = 'a t
 
   let get t i = get t (front_index_exn t + i)
@@ -483,7 +483,7 @@ let front_index_exn t =
   module For_test = struct
     let of_array = of_array
   end
-end) *)
+end)
 
 (* The "stable" indices used in this module make the application of the
    [Binary_searchable] functor awkward.  We need to be sure to translate incoming

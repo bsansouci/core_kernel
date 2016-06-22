@@ -93,8 +93,8 @@ module Stable = struct
     include T
     module Unstable = struct
       include T
-      include (Comparable.Make_binable (T) : Comparable.S_binable with type t := t)
-      include Hashable.   Make_binable (T)
+      include (Comparable.Make (T) : Comparable.S with type t := t)
+      include Hashable.   Make (T)
     end
     include Comparable.Stable.V1.Make (Unstable)
     include Stable_containers.Hashable.V1.Make   (Unstable)

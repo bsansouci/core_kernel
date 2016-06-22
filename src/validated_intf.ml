@@ -27,7 +27,7 @@ module type Raw = sig
   val validate : t Validate.check
 end
 
-module type Raw_binable = sig
+(* module type Raw_binable = sig
   type t
 
   include Raw with type t := t
@@ -45,7 +45,7 @@ module type Raw_binable = sig
       In that case, having [validate_binio_deserialization = true] is necessary to prevent
       creating values that don't pass the validation function. *)
   val validate_binio_deserialization : bool
-end
+end *)
 
 module type S = sig
   type ('raw, 'witness) validated
@@ -59,10 +59,10 @@ module type S = sig
   val raw : t -> raw
 end
 
-module type S_binable = sig
+(* module type S_binable = sig
   include S
   include sig type t = (raw, witness) validated end with type t := t
-end
+end *)
 
 module type Validated = sig
   type ('raw, 'witness) t = private 'raw
@@ -72,8 +72,8 @@ module type Validated = sig
   module type Raw = Raw
 
   module type S         = S         with type ('a, 'b) validated := ('a, 'b) t
-  module type S_binable = S_binable with type ('a, 'b) validated := ('a, 'b) t
+  (* module type S_binable = S_binable with type ('a, 'b) validated := ('a, 'b) t *)
 
   module Make         (Raw : Raw)         : S         with type raw := Raw.t
-  module Make_binable (Raw : Raw_binable) : S_binable with type raw := Raw.t
+  (* module Make_binable (Raw : Raw_binable) : S_binable with type raw := Raw.t *)
 end

@@ -36,9 +36,9 @@ include Pretty_printer.Register (struct
   let module_name = "Core_kernel.Std.Host_and_port"
 end)
 
-include (Hashable.Make_binable (T) : Hashable.S_binable with type t := t)
+include (Hashable.Make (T) : Hashable.S with type t := t)
 
-include Comparable.Make_binable (T)
+include Comparable.Make (T)
 
 let t_of_sexp = function
   | Sexp.Atom s as sexp ->

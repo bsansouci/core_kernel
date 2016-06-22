@@ -81,7 +81,7 @@ module Make_using_comparator (Key : sig
 
   module Key = struct
     include Key
-    include Comparable.Make_binable_using_comparator (Key)
+    include Comparable.Make_using_comparator (Key)
   end
 
   type comparator_witness = Key.comparator_witness
@@ -136,5 +136,5 @@ end
 
 module Make (Key : Key) = Make_using_comparator (struct
     include Key
-    include Comparable.Make_binable (Key)
+    include Comparable.Make (Key)
   end)

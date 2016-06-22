@@ -9,7 +9,7 @@ module type Stable2                   = Stable_module_types.S2
 include Stable_internal
 include Stable_containers
 
-module Binable       = Binable       .Stable
+(* module Binable       = Binable       .Stable *)
 module Blang         = Blang         .Stable
 module Byte_units    = Byte_units    .Stable
 module Comparable    = Comparable    .Stable

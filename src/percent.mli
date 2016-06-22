@@ -9,7 +9,7 @@ include Stringable with type t := t
 
 (** sexps are of the form 5bp or 0.05% or 0.0005x *)
 include Sexpable   with type t := t
-include Binable    with type t := t
+(* include Binable    with type t := t *)
 include Comparable with type t := t
 include Comparable.With_zero with type t := t
 

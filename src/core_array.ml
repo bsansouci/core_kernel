@@ -934,7 +934,7 @@ module T = struct
           then [||]
           else (assert (length t > 0); create ~len t.(0))
         ;;
-        let unsafe_blit = Array.blit
+        (* let unsafe_blit = Array.blit *)
         let create_bool ~len = create ~len false
       end)
   ;;

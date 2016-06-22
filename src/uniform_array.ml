@@ -14,7 +14,7 @@ module Trusted : sig
   val unsafe_get : 'a t -> int -> 'a
   val unsafe_set : 'a t -> int -> 'a -> unit
   val length : 'a t -> int
-  val unsafe_blit : ('a t, 'a t) Blit_intf.blit
+  (* val unsafe_blit : ('a t, 'a t) Blit_intf.blit *)
   val copy : 'a t -> 'a t
 
 end = struct
@@ -32,7 +32,7 @@ end = struct
 
   let length = Obj_array.length
 
-  let unsafe_blit = Obj_array.unsafe_blit
+  (* let unsafe_blit = Obj_array.unsafe_blit *)
 
   let copy = Obj_array.copy
 
@@ -107,7 +107,7 @@ include
         then empty
         else (assert (length t > 0); create ~len (get t 0))
       ;;
-      let unsafe_blit = unsafe_blit
+      (* let unsafe_blit = unsafe_blit *)
       let create_bool ~len = create ~len false
     end)
 

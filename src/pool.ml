@@ -645,10 +645,10 @@ let unsafe_free (type slots) (t : slots t) (pointer : slots Pointer.t) =
     for i = 0 to metadata.slots_per_tuple - 1 do
       Obj_array.unsafe_clear_if_pointer t (pos + i);
     done;
-  | Some dummy ->
-    Obj_array.unsafe_blit
+  | Some dummy -> ()
+    (* Obj_array.unsafe_blit
       ~src:dummy ~src_pos:0 ~len:metadata.slots_per_tuple
-      ~dst:t     ~dst_pos:(Pointer.first_slot_index pointer)
+      ~dst:t     ~dst_pos:(Pointer.first_slot_index pointer) *)
   end;
 ;;
 

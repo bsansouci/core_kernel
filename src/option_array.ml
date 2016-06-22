@@ -82,8 +82,8 @@ module Cheap_option = struct
       then Some (value_unsafe x)
       else None
 
-    let to_binable = to_option
-    let of_binable = of_option
+    (* let to_binable = to_option *)
+    (* let of_binable = of_option *)
 
     let to_sexpable = to_option
     let of_sexpable = of_option
@@ -91,7 +91,7 @@ module Cheap_option = struct
 
   include T1
   include Sexpable.Of_sexpable1(Option)(T1)
-  include Binable.Of_binable1(Option)(T1)
+  (* include Binable.Of_binable1(Option)(T1) *)
 
   let%test_module "Cheap_option" = (
     module struct
@@ -189,7 +189,7 @@ include
       type 'a z = 'a
       include Sequence
       let create_like ~len _ = create ~len
-      let unsafe_blit = Uniform_array.unsafe_blit
+      (* let unsafe_blit = Uniform_array.unsafe_blit *)
       let create_bool ~len = init_some len ~f:(fun _ -> false)
     end)
 

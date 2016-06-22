@@ -10,8 +10,8 @@ type t =
   | Sat
 [@@deriving compare, sexp]
 
-include Comparable.S_binable with type t := t
-include Hashable.  S_binable with type t := t
+include Comparable.S with type t := t
+include Hashable.  S with type t := t
 
 (** [of_string s] accepts three-character abbreviations and full day names
     with any capitalization, and strings of the integers 0-6. *)

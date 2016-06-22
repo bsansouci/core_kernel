@@ -35,21 +35,22 @@ module Make_gen
          with type 'a elt := 'a Elt.t
          with type 'a z := 'a Src.z
        val create_like : len:int -> 'a Src.t -> 'a t
-       val unsafe_blit : ('a Src.t, 'a t) blit
+       (* val unsafe_blit : ('a Src.t, 'a t) blit *)
        val overlapping_src_dst
          :  [ `Do_not_check
             | `Check of ('a Src.t -> 'a t)
             ]
      end) = struct
 
-  let unsafe_blit = Dst.unsafe_blit
+  (* let unsafe_blit = Dst.unsafe_blit *)
 
   let blit ~src ~src_pos ~dst ~dst_pos ~len =
     Ordered_collection_common.check_pos_len_exn
       ~pos:src_pos ~len ~length:(Src.length src);
     Ordered_collection_common.check_pos_len_exn
       ~pos:dst_pos ~len ~length:(Dst.length dst);
-    if len > 0 then unsafe_blit ~src ~src_pos ~dst ~dst_pos ~len;
+    assert false;
+    (* if len > 0 then unsafe_blit ~src ~src_pos ~dst ~dst_pos ~len; *)
   ;;
 
   let blito
@@ -64,7 +65,8 @@ module Make_gen
   let sub src ~pos ~len =
     Ordered_collection_common.check_pos_len_exn ~pos ~len ~length:(Src.length src);
     let dst = Dst.create_like ~len src in
-    if len > 0 then unsafe_blit ~src ~src_pos:pos ~dst ~dst_pos:0 ~len;
+    assert false;
+    (* if len > 0 then unsafe_blit ~src ~src_pos:pos ~dst ~dst_pos:0 ~len; *)
     dst
   ;;
 
@@ -165,7 +167,7 @@ module Make1
     (Sequence : sig
        include Sequence_gen with type 'a elt := 'a poly
        val create_like : len:int -> 'a t -> 'a t
-       val unsafe_blit : ('a t, 'a t) blit
+       (* val unsafe_blit : ('a t, 'a t) blit *)
      end) =
   Make_gen
     (struct
@@ -200,7 +202,7 @@ module Make
     (Elt : Elt)
     (Sequence : sig
        include Sequence with type elt := Elt.t
-       val unsafe_blit : (t, t) blit
+       (* val unsafe_blit : (t, t) blit *)
      end) = struct
   module Sequence = struct
     type 'a t = Sequence.t [@@deriving sexp_of]
@@ -210,7 +212,7 @@ module Make
     let length = length
     let get = get
     let set = set
-    let unsafe_blit = unsafe_blit
+    (* let unsafe_blit = unsafe_blit *)
     let create_bool = create
     let overlapping_src_dst = `Check Fn.id
   end
@@ -222,7 +224,7 @@ module Make_distinct
     (Src : Sequence with type elt := Elt.t)
     (Dst : sig
        include Sequence with type elt := Elt.t
-       val unsafe_blit : (Src.t, t) blit
+       (* val unsafe_blit : (Src.t, t) blit *)
      end) =
   Make_gen
     (Elt_to_elt1 (Elt))
@@ -243,7 +245,7 @@ module Make_distinct
       let set = set
       let create_bool = create
       let create_like ~len _ = create ~len
-      let unsafe_blit = unsafe_blit
+      (* let unsafe_blit = unsafe_blit *)
       let overlapping_src_dst = `Do_not_check
     end)
 
@@ -268,7 +270,7 @@ let%test_module _ = (module struct
         let length = Array.length
         let get = Array.get
         let set = Array.set
-        let unsafe_blit ~src ~src_pos ~dst ~dst_pos ~len =
+        (* let unsafe_blit ~src ~src_pos ~dst ~dst_pos ~len =
           blit_was_called := true;
           slices_are_valid :=
             Or_error.try_with (fun () ->
@@ -278,7 +280,7 @@ let%test_module _ = (module struct
               assert (dst_pos >= 0);
               assert (dst_pos + len <= Array.length dst));
           Array.blit ~src ~src_pos ~dst ~dst_pos ~len;
-        ;;
+        ;; *)
       end)
   ;;
 

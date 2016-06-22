@@ -106,7 +106,7 @@ end
 include Replace_polymorphic_compare
 
 include Hashable.Make (T)
-include Comparable.Make_using_comparator (T)
+include Comparable.Map_and_set_using_comparator (T)
 
 let zero = 0
 let one = 1

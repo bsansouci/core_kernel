@@ -8,8 +8,8 @@ type ('raw, 'witness) t = 'raw
 
 module type S = S
   with type ('a, 'b) validated := ('a, 'b) t
-module type S_binable = S_binable
-  with type ('a, 'b) validated := ('a, 'b) t
+(* module type S_binable = S_binable
+  with type ('a, 'b) validated := ('a, 'b) t *)
 
 let raw t = t
 
@@ -42,7 +42,7 @@ module Make (Raw : Raw) = struct
 
 end
 
-module Make_binable (Raw : Raw_binable) = struct
+(* module Make_binable (Raw : Raw_binable) = struct
 
   include Make (Raw)
 
@@ -55,7 +55,7 @@ module Make_binable (Raw : Raw_binable) = struct
     ;;
     let to_binable = Fn.id
   end)
-end
+end *)
 
 let%test_module _ = (module struct
 
@@ -121,7 +121,7 @@ let%test_module _ = (module struct
     ;;
   end
 
-  module M1 = Make_binable (struct
+  (* module M1 = Make_binable (struct
     let here = [%here]
     let validate_binio_deserialization = true
     include Positive_int
@@ -131,9 +131,9 @@ let%test_module _ = (module struct
     let here = [%here]
     let validate_binio_deserialization = false
     include Positive_int
-  end)
+  end) *)
 
-  let int = 0
+  (* let int = 0
   let string = Binable.to_string (module Int) int
   let%test _ = does_raise (fun () -> Binable.of_string (module M1) string)
   let%test _ = (Binable.of_string (module M2) string) = int
@@ -141,6 +141,6 @@ let%test_module _ = (module struct
   let int = 1
   let string = Binable.to_string (module Int) int
   let%test _ = Binable.of_string (module M1) string = int
-  let%test _ = Binable.of_string (module M2) string = int
+  let%test _ = Binable.of_string (module M2) string = int *)
 
 end)

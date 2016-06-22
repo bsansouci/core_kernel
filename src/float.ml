@@ -307,7 +307,7 @@ include Robustly_comparable
 let epsilon_float = Pervasives.epsilon_float
 let%test _ = epsilon_float = (one_ulp `Up 1.) -. 1.
 
-include Hashable.Make_binable (T)
+include Hashable.Make (T)
 
 let of_int = Core_int.to_float
 let to_int = Core_int.of_float
@@ -1083,7 +1083,7 @@ let ( * ) = ( *. )
 let ( / ) = ( /. )
 let ( ~- ) = ( ~-. )
 
-include Comparable.Map_and_set_binable (T)
+include Comparable.Map_and_set (T)
 
 let robust_sign t : Sign.t =
   if t >. 0.

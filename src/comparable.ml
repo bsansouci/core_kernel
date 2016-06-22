@@ -55,20 +55,20 @@ module Validate_with_zero
   include With_zero (struct include T include V end)
 end
 
-(* module Map_and_set_binable_using_comparator (T : sig
+module Map_and_set_using_comparator (T : sig
     type t [@@deriving compare, sexp]
     include Comparator.S with type t := t
   end) = struct
   include T
-  module Map = Core_map.Make_binable_using_comparator (T)
-  module Set = Core_set.Make_binable_using_comparator (T)
-end *)
+  module Map = Core_map.Make_using_comparator (T)
+  module Set = Core_set.Make_using_comparator (T)
+end
 
-(* module Map_and_set_binable (T : sig type t [@@deriving compare, sexp] end) =
-  Map_and_set_binable_using_comparator (struct
+module Map_and_set (T : sig type t [@@deriving compare, sexp] end) =
+  Map_and_set_using_comparator (struct
     include T
     include Comparator.Make (T)
-  end) *)
+  end)
 
 module Poly (T : sig type t [@@deriving sexp] end) = struct
   module Replace_polymorphic_compare = struct

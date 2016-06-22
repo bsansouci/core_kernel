@@ -377,14 +377,14 @@ module With_key (Key : sig
     of_serialized (Serialized.t_of_sexp Key.t_of_sexp data_of_sexp sexp)
   ;;
 
-  include Binable.Of_binable1
+  (* include Binable.Of_binable1
       (struct type 'data t = (Key.t, 'data) Serialized.t end)
       (struct
         type 'data t = 'data table
 
         let to_binable = to_serialized
         let of_binable = of_serialized
-      end)
+      end) *)
 
 end
 
@@ -634,8 +634,9 @@ let%test_module _ =
         let module T = struct
           type t = int Table.t [@@deriving sexp]
         end in
-        let binable_m = (module T : Binable.S with type t = T.t) in
-        ensure_equal "binio" t (Binable.of_string binable_m (Binable.to_string binable_m t))
+        ()
+        (* let binable_m = (module T : Binable.S with type t = T.t) in
+        ensure_equal "binio" t (Binable.of_string binable_m (Binable.to_string binable_m t)) *)
       done
     ;;
 

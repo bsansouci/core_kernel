@@ -63,7 +63,7 @@ module Stable = struct
     end with type t := t)
 
     include (Sexpable.Stable.Of_stringable.V1 (Stringable) : Sexpable.S with type t := t)
-    include (Float : Binable with type t := t)
+    (* include (Float : Binable with type t := t) *)
     include (Float : Comparable with type t := t)
   end
 

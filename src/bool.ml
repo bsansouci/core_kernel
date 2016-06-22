@@ -59,7 +59,7 @@ include Replace_polymorphic_compare
    a bool in it that needs a custom hash function. *)
 include Hashable.Make (T)
 
-include Comparable.S (T)
+include Comparable.Map_and_set (T)
 include Comparable.Validate (T)
 
 let gen =
