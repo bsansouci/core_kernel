@@ -5,7 +5,7 @@
 *)
 open Typerep_lib.Std
 open Sexplib.Std
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 
 module Conv = Int_conversions
 
@@ -162,15 +162,15 @@ module T = struct
         if sign = `Neg then neg int63 else int63
     with _ -> invalid_str str
 
-  include Binable0.Of_binable
+  (* include Binable0.Of_binable
       (struct
-        type t = int64 [@@deriving bin_io]
+        type t = int64
       end)
       (struct
         type t = W.t
         let of_binable = wrap_exn
         let to_binable = unwrap
-      end)
+      end) *)
 end
 
 include T
@@ -238,8 +238,8 @@ end
 
 include Replace_polymorphic_compare
 
-include Hashable.Make_binable (T)
-include Comparable.Map_and_set_binable (T)
+include Hashable.Make (T)
+include Comparable.Make (T)
 
 let ( / ) = div
 let ( * ) = mul
@@ -267,7 +267,7 @@ include Conv.Make (T)
 
 include Conv.Make_hex(struct
 
-  type t = T.t [@@deriving bin_io, compare, typerep]
+  type t = T.t [@@deriving compare, typerep]
 
   let zero = zero
   let neg = (~-)

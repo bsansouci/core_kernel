@@ -1,4 +1,4 @@
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 open Sexplib.Std
 
 module Sexp = Sexplib.Sexp
@@ -13,7 +13,7 @@ module Stable = struct
           pos_bol : int;
           pos_cnum : int;
         }
-      [@@deriving bin_io, compare, sexp]
+      [@@deriving compare, sexp]
     end
     include T'
     include Comparator.Stable.V1.Make (T')

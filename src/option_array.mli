@@ -3,7 +3,7 @@
     instead.  It uses a special representation for [None] that's guaranteed to never
     collide with any representation of [Some x]. *)
 
-type 'a t [@@deriving sexp, bin_io]
+type 'a t [@@deriving sexp]
 
 val empty : _ t
 

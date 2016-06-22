@@ -18,7 +18,7 @@ module Stable = struct
         | Thu
         | Fri
         | Sat
-      [@@deriving bin_io, compare]
+      [@@deriving compare]
 
       let hash = Hashtbl.hash
 

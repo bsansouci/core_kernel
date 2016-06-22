@@ -8,7 +8,7 @@
 
 
 (** See [Core.Std.Array] for comments. *)
-type 'a t [@@deriving bin_io, sexp]
+type 'a t [@@deriving sexp]
 
 
 val empty : _ t
@@ -40,4 +40,3 @@ val to_list : 'a t -> 'a list
 include Blit.S1 with type 'a t := 'a t
 
 val copy : 'a t -> 'a t
-

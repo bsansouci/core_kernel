@@ -17,15 +17,15 @@
 
 open T
 
-module Binable = Binable0
+(* module Binable = Binable0 *)
 
 module type Elt = sig
   type t [@@deriving compare, sexp]
 end
 
-module type Elt_binable = sig
-  type t [@@deriving bin_io, compare, sexp]
-end
+(* module type Elt_binable = sig
+  type t [@@deriving compare, sexp]
+end *)
 
 module Without_comparator = Core_map_intf.Without_comparator
 module With_comparator    = Core_map_intf.With_comparator
@@ -765,7 +765,7 @@ module type S0 = sig
     with type comparator_witness := Elt.comparator_witness
 end
 
-module type S0_binable = sig
+(* module type S0_binable = sig
   include S0
   include Binable.S with type t := t
-end
+end *)

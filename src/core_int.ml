@@ -1,13 +1,13 @@
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 open Sexplib.Std
 
 module Stable_workaround = struct
-  open Bin_prot.Std
+  (* open Bin_prot.Std *)
   open Sexplib.Std
 
   module V1 = struct
     module T = struct
-      type t = int [@@deriving bin_io, sexp]
+      type t = int [@@deriving sexp]
 
       (*
          if i = j then 0 else if i < j then -1 else 1
@@ -40,7 +40,7 @@ open Common
 open Typerep_lib.Std
 
 module T = struct
-  type t = Stable.V1.t [@@deriving bin_io, compare, sexp]
+  type t = Stable.V1.t [@@deriving compare, sexp]
 
   module X = struct
     type t = int [@@deriving typerep]
@@ -105,8 +105,8 @@ end
 
 include Replace_polymorphic_compare
 
-include Hashable.Make_binable (T)
-include Comparable.Map_and_set_binable_using_comparator (T)
+include Hashable.Make (T)
+include Comparable.Make_using_comparator (T)
 
 let zero = 0
 let one = 1
@@ -145,7 +145,7 @@ include Conv.Make (T)
 
 include Conv.Make_hex(struct
 
-  type t = int [@@deriving bin_io, compare, typerep]
+  type t = int [@@deriving compare, typerep]
 
   let zero = zero
   let neg = (~-)

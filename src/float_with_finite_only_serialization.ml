@@ -12,11 +12,11 @@ let verify t =
   | FP_infinite
   | FP_nan       -> raise Nan_or_inf
 
-include Binable.Of_binable (Float) (struct
+(* include Binable.Of_binable (Float) (struct
     type nonrec t = t
     let of_binable t = verify t; t
     let to_binable t = verify t; t
-  end)
+  end) *)
 
 let sexp_of_t = Float.sexp_of_t
 

@@ -46,7 +46,7 @@ open Int_replace_polymorphic_compare
 
 
 module type Elt = Elt
-module type Elt_binable = Elt_binable
+(* module type Elt_binable = Elt_binable *)
 
 module Tree0 = struct
   type 'a t = 'a Stable0.Tree0.V1.t =
@@ -1348,9 +1348,9 @@ module Poly = struct
 
   let sexp_of_t = sexp_of_t
 
-  include Bin_prot.Utils.Make_iterable_binable1 (struct
+  (* include Bin_prot.Utils.Make_iterable_binable1 (struct
     type 'a t = ('a, Elt.comparator_witness) set
-    type 'a el = 'a [@@deriving bin_io]
+    type 'a el = 'a
     let _ = bin_el
 
     let module_name = Some "Core_kernel.Std.Set"
@@ -1359,7 +1359,7 @@ module Poly = struct
     let init ~len ~next =
       init_for_bin_prot ~len ~f:(fun _ -> next ()) ~comparator:Comparator.Poly.comparator
 
-  end)
+  end) *)
 
   module Tree = struct
     include Make_tree (Comparator.Poly)
@@ -1386,9 +1386,9 @@ module type S = S0
   with type ('a, 'b) set  := ('a, 'b) t
   with type ('a, 'b) tree := ('a, 'b) tree
 
-module type S_binable = S0_binable
+(* module type S_binable = S0_binable
   with type ('a, 'b) set  := ('a, 'b) t
-  with type ('a, 'b) tree := ('a, 'b) tree
+  with type ('a, 'b) tree := ('a, 'b) tree *)
 
 module Make_using_comparator (Elt : sig
   type t [@@deriving sexp]
@@ -1432,16 +1432,16 @@ module Make (Elt : Elt) =
     include Comparator.Make (Elt)
   end)
 
-module Make_binable_using_comparator (Elt' : sig
-  type t [@@deriving bin_io, sexp]
+(* module Make_binable_using_comparator (Elt' : sig
+  type t [@@deriving sexp]
   include Comparator.S with type t := t
 end) = struct
 
   include (Make_using_comparator (Elt'))
 
-  include Bin_prot.Utils.Make_iterable_binable (struct
+  (* include Bin_prot.Utils.Make_iterable_binable (struct
     type nonrec t = t
-    type el = Elt'.t [@@deriving bin_io]
+    type el = Elt'.t
     let _ = bin_el
 
     let module_name = Some "Core_kernel.Std.Set"
@@ -1450,15 +1450,15 @@ end) = struct
     let init ~len ~next =
       init_for_bin_prot ~len ~f:(fun _ -> next ()) ~comparator:Elt'.comparator
 
-  end)
+  end) *)
 
-end
+end *)
 
-module Make_binable (Elt : Elt_binable) =
+(* module Make_binable (Elt : Elt_binable) =
   Make_binable_using_comparator (struct
     include Elt
     include Comparator.Make (Elt)
-  end)
+  end) *)
 
 module Tree = struct
   type ('a, 'comparator) t = ('a, 'comparator) tree
@@ -1564,6 +1564,6 @@ module Stable = struct
     end
 
     module Make (Elt : Stable_module_types.S0) =
-      Make_binable_using_comparator (Elt)
+      Make_using_comparator (Elt)
   end
 end

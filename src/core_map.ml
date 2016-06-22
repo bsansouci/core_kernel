@@ -1515,9 +1515,9 @@ module Poly = struct
 
   let sexp_of_t = sexp_of_t
 
-  include Bin_prot.Utils.Make_iterable_binable2 (struct
+  (* include Bin_prot.Utils.Make_iterable_binable2 (struct
       type nonrec ('a, 'b) t = ('a, 'b) t
-      type ('a, 'b) el = 'a * 'b [@@deriving bin_io]
+      type ('a, 'b) el = 'a * 'b
       let _ = bin_el
       let module_name = Some "Core.Std.Map"
       let length = length
@@ -1527,7 +1527,7 @@ module Poly = struct
           ~len
           ~f:(fun _ -> next ())
           ~comparator:Comparator.Poly.comparator
-    end)
+    end) *)
 
 
   module Tree = struct
@@ -1541,15 +1541,15 @@ module Poly = struct
 end
 
 module type Key = Key
-module type Key_binable = Key_binable
+(* module type Key_binable = Key_binable *)
 
 module type S = S
   with type ('a, 'b, 'c) map  := ('a, 'b, 'c) t
   with type ('a, 'b, 'c) tree := ('a, 'b, 'c) tree
 
-module type S_binable = S_binable
+(* module type S_binable = S_binable
   with type ('a, 'b, 'c) map  := ('a, 'b, 'c) t
-  with type ('a, 'b, 'c) tree := ('a, 'b, 'c) tree
+  with type ('a, 'b, 'c) tree := ('a, 'b, 'c) tree *)
 
 module Make_using_comparator (Key : sig
   type t [@@deriving sexp]
@@ -1590,15 +1590,15 @@ module Make (Key : Key) =
     include Comparator.Make (Key)
   end)
 
-module Make_binable_using_comparator (Key' : sig
-  type t [@@deriving bin_io, sexp]
+(* module Make_binable_using_comparator (Key' : sig
+  type t [@@deriving sexp]
   include Comparator.S with type t := t
 end) = struct
 
   include Make_using_comparator (Key')
-  include Bin_prot.Utils.Make_iterable_binable1 (struct
+  (* include Bin_prot.Utils.Make_iterable_binable1 (struct
       type nonrec 'v t = 'v t
-      type 'v el = Key'.t * 'v [@@deriving bin_io]
+      type 'v el = Key'.t * 'v
       let _ = bin_el
       let module_name = Some "Core.Std.Map"
       let length = length
@@ -1608,14 +1608,14 @@ end) = struct
           ~len
           ~f:(fun _ -> next ())
           ~comparator:Key'.comparator
-    end)
-end
+    end) *)
+end *)
 
-module Make_binable (Key : Key_binable) =
+(* module Make_binable (Key : Key_binable) =
   Make_binable_using_comparator (struct
     include Key
     include Comparator.Make (Key)
-  end)
+  end) *)
 
 (* As with [Make_tree], this module uses [0] as [length] everywhere. *)
 module Tree = struct
@@ -1796,6 +1796,6 @@ module Stable = struct
       include Stable_module_types.S1 with type 'a t := 'a t
     end
 
-    module Make (Key : Stable_module_types.S0) = Make_binable_using_comparator (Key)
+    module Make (Key : Stable_module_types.S0) = Make_using_comparator (Key)
   end
 end

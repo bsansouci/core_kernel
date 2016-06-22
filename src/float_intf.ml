@@ -1,11 +1,11 @@
 (** Floating-point representation and utilities. *)
 
-module Binable = Binable0
+(* module Binable = Binable0 *)
 
 module type S = sig
   type t [@@deriving typerep]
   type outer = t
-  [@@deriving bin_io, sexp, typerep]
+  [@@deriving sexp, typerep]
 
 
   include Floatable.S with type t := t
@@ -315,7 +315,7 @@ module type S = sig
     | Normal
     | Subnormal
     | Zero
-    [@@deriving bin_io, sexp]
+    [@@deriving sexp]
 
     include Stringable.S with type t := t
   end
@@ -396,7 +396,7 @@ module type S = sig
 
   (** S-expressions contain at most 8 significant digits. *)
   module Terse : sig
-    type t = outer [@@deriving bin_io, sexp]
+    type t = outer [@@deriving sexp]
     include Stringable.S with type t := t
   end
 

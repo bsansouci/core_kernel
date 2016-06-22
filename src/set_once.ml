@@ -1,10 +1,10 @@
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 open Sexplib.Std
 open OcamlResult.Result
 
 exception Already_set [@@deriving sexp]
 
-type 'a t = 'a option ref [@@deriving bin_io, sexp]
+type 'a t = 'a option ref [@@deriving sexp]
 
 let invariant invariant_a t =
   match !t with

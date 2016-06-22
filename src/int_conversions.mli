@@ -83,7 +83,7 @@ end) : sig
 end
 
 module Make_hex (I : sig
-                   type t [@@deriving bin_io, compare, typerep]
+                   type t [@@deriving compare, typerep]
 
                    (** [to_string] and [of_string] convert between [t] and unsigned,
                        unprefixed hexadecimal *)
@@ -112,4 +112,3 @@ val insert_delimiter : string -> delimiter:char -> string
 
 (** [insert_delimiter ~delimiter:'_'] *)
 val insert_underscores : string -> string
-

@@ -12,7 +12,7 @@
 type ('ok, 'err) t = ('ok, 'err) OcamlResult.Result.t =
   | Ok of 'ok
   | Error of 'err
-[@@deriving bin_io, sexp, compare]
+[@@deriving sexp, compare]
 
 include Monad.S2 with type ('a,'err) t := ('a,'err) t
 

@@ -46,7 +46,7 @@ module type S = sig
     val phys_equal   : 'a t -> 'a t -> bool
 
     module Id : sig
-      type t [@@deriving bin_io, sexp]
+      type t [@@deriving sexp]
 
       val to_int63 : t -> Int63.t
       val of_int63 : Int63.t -> t

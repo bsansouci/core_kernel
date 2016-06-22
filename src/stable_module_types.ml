@@ -1,5 +1,5 @@
 module type S0_without_comparator = sig
-  type t [@@deriving bin_io, compare, sexp]
+  type t [@@deriving compare, sexp]
 end
 
 module type S0 = sig
@@ -12,11 +12,11 @@ end
     reaching into the unstable part of the module. *)
 
 module type S1 = sig
-  type 'a t [@@deriving bin_io, compare, sexp]
+  type 'a t [@@deriving compare, sexp]
   val map : 'a t -> f:('a -> 'b) -> 'b t
 end
 
 module type S2 = sig
-  type ('a1, 'a2) t [@@deriving bin_io, compare, sexp]
+  type ('a1, 'a2) t [@@deriving compare, sexp]
   val map : ('a1, 'a2) t -> f1:('a1 -> 'b1) -> f2:('a2 -> 'b2) -> ('b1, 'b2) t
 end

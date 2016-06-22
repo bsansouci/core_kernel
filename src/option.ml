@@ -1,9 +1,9 @@
 open Typerep_lib.Std
 open Sexplib.Std
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 module List = ListLabels
 
-type 'a t = 'a option [@@deriving bin_io, sexp, compare, typerep]
+type 'a t = 'a option [@@deriving sexp, compare, typerep]
 
 let is_none = function None -> true | _ -> false
 

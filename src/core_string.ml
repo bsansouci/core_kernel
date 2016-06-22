@@ -1,12 +1,12 @@
 module String = Caml.BytesLabels
 
 module Stable_workaround = struct
-  open Bin_prot.Std
+  (* open Bin_prot.Std *)
   open Sexplib.Std
 
   module V1 = struct
     module T = struct
-      type t = string [@@deriving bin_io, sexp]
+      type t = string [@@deriving sexp]
       let compare = String.compare
     end
     module C = Comparator.Stable.V1.Make (T)
@@ -27,7 +27,7 @@ module Char = Core_char
 module List = Core_list
 open Typerep_lib.Std
 open Sexplib.Std
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 open Core_result.Export
 open Staged
 
@@ -38,7 +38,7 @@ let invalid_argf = Core_printf.invalid_argf
 let failwiths = Error.failwiths
 
 module T = struct
-  type t = string [@@deriving sexp, bin_io, typerep]
+  type t = string [@@deriving sexp, typerep]
   let compare = String.compare
 
   type comparator_witness = Stable.V1.comparator_witness
@@ -102,7 +102,7 @@ let is_prefix_gen =
 
 module Caseless = struct
   module T = struct
-    type t = string [@@deriving bin_io, sexp]
+    type t = string [@@deriving sexp]
 
     (* This function gives the same result as [compare (lowercase s1) (lowercase s2)]. It
        is optimised so that it is as fast as that implementation, but uses constant memory
@@ -152,8 +152,8 @@ module Caseless = struct
   end
 
   include T
-  include Comparable.Make_binable(T)
-  include Hashable.Make_binable(T)
+  include Comparable.Make(T)
+  include Hashable.Make(T)
 end
 
 let%test_module "Caseless Suffix/Prefix" = (module struct
@@ -1011,10 +1011,10 @@ module Hash = struct
 
 end
 
-include (Hashable.Make_binable (struct
+include (Hashable.Make (struct
   include T
   include Hash
-end) : Hashable.S_binable with type t := t)
+end) : Hashable.S with type t := t)
 
 (* [include Hash] to make the [external] version override the [hash] from
    [Hashable.Make_binable], so that we get a little bit of a speedup by exposing it as
@@ -1022,7 +1022,7 @@ end) : Hashable.S_binable with type t := t)
 include Hash
 
 
-include Comparable.Map_and_set_binable_using_comparator (T)
+include Comparable.Make_using_comparator (T)
 include Comparable.Validate (T)
 
 (* for interactive top-levels -- modules deriving from String should have String's pretty

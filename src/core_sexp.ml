@@ -1,6 +1,6 @@
 module Sexp = Sexplib.Sexp
 open Sexplib.Std
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 
 include Sexp
 
@@ -12,10 +12,10 @@ end
 
 module T : sig
   include Sexpable.S         with type t := Sexp.t
-  include Bin_prot.Binable.S with type t := Sexp.t
+  (* include Bin_prot.Binable.S with type t := Sexp.t *)
   val compare : t -> t -> int
 end = struct
-  type t = Sexp.t = Atom of string | List of t list [@@deriving bin_io, compare]
+  type t = Sexp.t = Atom of string | List of t list [@@deriving compare]
 
   let sexp_of_t t = t
   let t_of_sexp t = t
@@ -25,7 +25,7 @@ include T
 
 module Sexp_maybe = struct
 
-  type sexp = t [@@deriving bin_io, compare]             (* avoid recursive type *)
+  type sexp = t [@@deriving compare]             (* avoid recursive type *)
 
   (* to satisfy pa_compare *)
   module Error = struct
@@ -33,7 +33,7 @@ module Sexp_maybe = struct
     include Comparable.Poly (Error)
   end
 
-  type 'a t = ('a, sexp * Error.t) Core_result.t [@@deriving bin_io, compare]
+  type 'a t = ('a, sexp * Error.t) Core_result.t [@@deriving compare]
 
   let sexp_of_t sexp_of_a t =
     match t with
@@ -61,7 +61,6 @@ module With_text = struct
     { value: 'a
     ; text: string
     }
-  [@@deriving bin_io]
 
   let sexp_of_t _ t = Sexp.Atom t.text
 
@@ -138,7 +137,7 @@ end
 
 let of_int_style = Int_conversions.sexp_of_int_style
 
-type 'a no_raise = 'a [@@deriving bin_io, sexp]
+type 'a no_raise = 'a [@@deriving sexp]
 
 let sexp_of_no_raise sexp_of_a a =
   try sexp_of_a a

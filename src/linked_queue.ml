@@ -1,10 +1,10 @@
 open Common
 
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 open Sexplib.Conv
 
 module Array = Core_array
-module Binable = Binable0
+(* module Binable = Binable0 *)
 module List = Core_list
 module Queue = Caml.Queue
 
@@ -135,11 +135,11 @@ let singleton a =
   t
 ;;
 
-include
+(* include
   Bin_prot.Utils.Make_iterable_binable1 (struct
 
     type 'a t = 'a Queue.t
-    type 'a el = 'a [@@deriving bin_io]
+    type 'a el = 'a
 
     let module_name = Some "Core_kernel.Std.Linked_queue"
 
@@ -156,13 +156,13 @@ include
         enqueue t (next ())
       done;
       t
-  end)
+  end) *)
 
-let%test_module _ = (module struct
+(* let%test_module _ = (module struct
   let m =
     let module M  = struct
-      type 'a u = 'a t [@@deriving bin_io]
-      type t = int u [@@deriving bin_io]
+      type 'a u = 'a t
+      type t = int u
     end
     in
     (module M : Binable.S with type t = M.t)
@@ -180,4 +180,4 @@ let%test_module _ = (module struct
   let%test _ = test [ 1; 2; 3 ]
   let%test _ = test (List.init 10_000 ~f:Fn.id)
 
-end)
+end) *)

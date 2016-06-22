@@ -16,7 +16,7 @@ let reraise exc str =
 let reraisef exc format =
   Printf.ksprintf (fun str () -> reraise exc str) format
 
-let install_sexp_converters () =
+(* let install_sexp_converters () =
   StdLabels.List.iter
     ~f:(fun (exc, handler) ->
       Conv.Exn_converter.add_auto ~finalise:false exc handler)
@@ -33,7 +33,7 @@ let install_sexp_converters () =
             ]
         | _ -> assert false)
       );
-    ]
+    ] *)
 
 let to_string exc = Sexp.to_string_hum ~indent:2 (sexp_of_exn exc)
 let to_string_mach exc = Sexp.to_string_mach (sexp_of_exn exc)
@@ -121,6 +121,6 @@ let raise_without_backtrace e =
 ;;
 
 let initialize_module () =
-  install_sexp_converters ();
+  (* install_sexp_converters (); *)
   set_uncaught_exception_handler ();
 ;;

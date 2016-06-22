@@ -3,7 +3,7 @@ open Sexplib.Conv
 open Core_hashtbl_intf
 open With_return
 
-module Binable = Binable0
+(* module Binable = Binable0 *)
 
 let failwiths = Error.failwiths
 
@@ -112,7 +112,7 @@ type ('k, 'd) t = ('k, 'd) hashtbl
 type 'a key = 'a
 
 module type S         = S         with type ('a, 'b) hashtbl = ('a, 'b) t
-module type S_binable = S_binable with type ('a, 'b) hashtbl = ('a, 'b) t
+(* module type S_binable = S_binable with type ('a, 'b) hashtbl = ('a, 'b) t *)
 
 let sexp_of_key t = t.hashable.Hashable.sexp_of_t ;;
 
@@ -945,7 +945,7 @@ module Accessors = struct
 end
 
 module type Key         = Key
-module type Key_binable = Key_binable
+(* module type Key_binable = Key_binable *)
 
 module Creators (Key : sig
   type 'a t
@@ -1035,10 +1035,10 @@ module Poly = struct
 
   let sexp_of_t = sexp_of_t
 
-  include Bin_prot.Utils.Make_iterable_binable2 (struct
+  (* include Bin_prot.Utils.Make_iterable_binable2 (struct
     type ('a, 'b) z = ('a, 'b) t
     type ('a, 'b) t = ('a, 'b) z
-    type ('a, 'b) el = 'a * 'b [@@deriving bin_io]
+    type ('a, 'b) el = 'a * 'b
 
     let module_name = Some "Pooled_hashtbl"
     let length = length
@@ -1053,7 +1053,7 @@ module Poly = struct
       done;
       t
     ;;
-  end)
+  end) *)
 
 end
 
@@ -1086,15 +1086,15 @@ module Make (Key : Key) = struct
 
 end
 
-module Make_binable (Key : sig
+(* module Make_binable (Key : sig
   include Key
   include Binable.S with type t := t
 end) = struct
   include Make (Key)
 
-  include Bin_prot.Utils.Make_iterable_binable1 (struct
+  (* include Bin_prot.Utils.Make_iterable_binable1 (struct
     type nonrec 'a t = 'a t
-    type 'a el = Key.t * 'a [@@deriving bin_io]
+    type 'a el = Key.t * 'a
 
     let module_name = Some "Pooled_hashtbl"
     let length = length
@@ -1110,9 +1110,9 @@ end) = struct
       done;
       t
     ;;
-  end)
+  end) *)
 
-end
+end *)
 
 let%bench_module "Pooled_hashtbl" = (module struct
   (* Big enough so that the arrays are not allocated on the minor. Minor allocations

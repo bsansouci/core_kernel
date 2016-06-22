@@ -15,16 +15,16 @@
 
 open T
 
-module Binable = Binable0
+(* module Binable = Binable0 *)
 module List = Core_list
 
 module type Key = sig
   type t [@@deriving compare, sexp]
 end
 
-module type Key_binable = sig
-  type t [@@deriving bin_io, compare, sexp]
-end
+(* module type Key_binable = sig
+  type t [@@deriving compare, sexp]
+end *)
 
 module Without_comparator = struct
   type ('key, 'cmp, 'z) t = 'z
@@ -36,7 +36,7 @@ end
 
 module Symmetric_diff_element = struct
   type ('k, 'v) t = 'k * [ `Left of 'v | `Right of 'v | `Unequal of 'v * 'v ]
-  [@@deriving bin_io, compare, sexp]
+  [@@deriving compare, sexp]
 end
 
 module type Accessors_generic = sig
@@ -1121,7 +1121,7 @@ module type S = sig
     with type key     := Key.t
 end
 
-module type S_binable = sig
+(* module type S_binable = sig
   include S
   include Binable.S1 with type 'a t := 'a t
-end
+end *)

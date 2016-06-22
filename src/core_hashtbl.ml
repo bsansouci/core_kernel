@@ -4,7 +4,7 @@ open Int_replace_polymorphic_compare
 open Core_hashtbl_intf
 open With_return
 
-module Binable = Binable0
+(* module Binable = Binable0 *)
 
 let failwiths = Error.failwiths
 
@@ -43,7 +43,7 @@ type ('k, 'v) hashtbl = ('k, 'v) t
 type 'a key = 'a
 
 module type S         = S         with type ('a, 'b) hashtbl = ('a, 'b) t
-module type S_binable = S_binable with type ('a, 'b) hashtbl = ('a, 'b) t
+(* module type S_binable = S_binable with type ('a, 'b) hashtbl = ('a, 'b) t *)
 
 let sexp_of_key t = t.hashable.Hashable.sexp_of_t
 let compare_key t = t.hashable.Hashable.compare
@@ -753,7 +753,7 @@ module Accessors = struct
 end
 
 module type Key = Key
-module type Key_binable = Key_binable
+(* module type Key_binable = Key_binable *)
 
 module Creators (Key : sig
   type 'a t
@@ -841,10 +841,10 @@ module Poly = struct
 
   let sexp_of_t = sexp_of_t
 
-  include Bin_prot.Utils.Make_iterable_binable2 (struct
+  (* include Bin_prot.Utils.Make_iterable_binable2 (struct
     type ('a, 'b) z = ('a, 'b) t
     type ('a, 'b) t = ('a, 'b) z
-    type ('a, 'b) el = 'a * 'b [@@deriving bin_io]
+    type ('a, 'b) el = 'a * 'b
 
     let module_name = Some "Core_kernel.Std.Hashtbl"
     let length = length
@@ -859,7 +859,7 @@ module Poly = struct
       done;
       t
     ;;
-  end)
+  end) *)
 
 end
 
@@ -893,13 +893,13 @@ module Make (Key : Key) = struct
 
 end
 
-module Make_binable (Key : Key_binable) = struct
+(* module Make_binable (Key : Key_binable) = struct
 
   include Make (Key)
 
-  include Bin_prot.Utils.Make_iterable_binable1 (struct
+  (* include Bin_prot.Utils.Make_iterable_binable1 (struct
     type nonrec 'a t = 'a t
-    type 'a el = Key.t * 'a [@@deriving bin_io]
+    type 'a el = Key.t * 'a
 
     let module_name = Some "Core_kernel.Std.Hashtbl"
     let length = length
@@ -915,15 +915,15 @@ module Make_binable (Key : Key_binable) = struct
       done;
       t
     ;;
-  end)
+  end) *)
 
-end
+end *)
 
-let%test_unit _ = (* [sexp_of_t] output is sorted by key *)
+(* let%test_unit _ = (* [sexp_of_t] output is sorted by key *)
   let module Table =
     Make (struct
       open Bin_prot.Std
-      type t = int [@@deriving bin_io, compare, sexp]
+      type t = int [@@deriving compare, sexp]
       let hash (x : t) = if x >= 0 then x else ~-x
     end)
   in
@@ -942,4 +942,4 @@ let%test_unit _ = (* [sexp_of_t] output is sorted by key *)
         |> [%of_sexp: (int * unit) list]
       in
       assert (Core_list.is_sorted list ~compare:(fun (i1, _) (i2, _) -> i1 - i2)))
-;;
+;; *)

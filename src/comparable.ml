@@ -55,20 +55,20 @@ module Validate_with_zero
   include With_zero (struct include T include V end)
 end
 
-module Map_and_set_binable_using_comparator (T : sig
-    type t [@@deriving bin_io, compare, sexp]
+(* module Map_and_set_binable_using_comparator (T : sig
+    type t [@@deriving compare, sexp]
     include Comparator.S with type t := t
   end) = struct
   include T
   module Map = Core_map.Make_binable_using_comparator (T)
   module Set = Core_set.Make_binable_using_comparator (T)
-end
+end *)
 
-module Map_and_set_binable (T : sig type t [@@deriving bin_io, compare, sexp] end) =
+(* module Map_and_set_binable (T : sig type t [@@deriving compare, sexp] end) =
   Map_and_set_binable_using_comparator (struct
     include T
     include Comparator.Make (T)
-  end)
+  end) *)
 
 module Poly (T : sig type t [@@deriving sexp] end) = struct
   module Replace_polymorphic_compare = struct
@@ -167,8 +167,8 @@ end) : S with type t := T.t = struct
   include Make_using_comparator (C)
 end
 
-module Make_binable_using_comparator (T : sig
-  type t [@@deriving bin_io, sexp]
+(* module Make_binable_using_comparator (T : sig
+  type t [@@deriving sexp]
   include Comparator.S with type t := t
 end) = struct
   include T
@@ -178,17 +178,17 @@ end) = struct
     end)
   module Map = Core_map.Make_binable_using_comparator (T)
   module Set = Core_set.Make_binable_using_comparator (T)
-end
+end *)
 
-module Make_binable (T : sig
-  type t [@@deriving bin_io, compare, sexp]
+(* module Make_binable (T : sig
+  type t [@@deriving compare, sexp]
 end) = struct
   module C = struct
     include T
     include Comparator.Make (T)
   end
   include Make_binable_using_comparator (C)
-end
+end *)
 
 module Inherit
   (C : sig type t [@@deriving compare] end)

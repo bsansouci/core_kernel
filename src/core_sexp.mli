@@ -3,7 +3,7 @@ open Sexplib
 (** Code for managing s-expressions *)
 
 type t = Sexp.t = Atom of string | List of t list
-[@@deriving bin_io, sexp]
+[@@deriving sexp]
 
 module O : sig
   type sexp = Sexp.t = Atom of string | List of t list
@@ -25,7 +25,7 @@ val of_int_style : [ `Underscores | `No_underscores ] ref
     exception being raised.
 
     WARNING: The resulting [no_raise_of_sexp] can still raise. *)
-type 'a no_raise = 'a [@@deriving bin_io, sexp]
+type 'a no_raise = 'a [@@deriving sexp]
 
 (** If [sexp_of_t fails], it returns [Error] rather than raising. You can convert values
     of this type to and from sexp in processes that can or cannot parse the underlying
@@ -45,7 +45,7 @@ type 'a no_raise = 'a [@@deriving bin_io, sexp]
     If [Reason_to_stop.t_of_sexp] fails, you can still tell it was a [Stop] query.
 *)
 module Sexp_maybe : sig
-  type 'a t = ('a, Sexp.t * Error.t) OcamlResult.Result.t [@@deriving bin_io, compare, sexp]
+  type 'a t = ('a, Sexp.t * Error.t) OcamlResult.Result.t [@@deriving compare, sexp]
 end
 
 (** A [With_text.t] is a value paired with the full textual representation of its sexp.
@@ -65,7 +65,7 @@ end
     The invariants of a [x With_text.t] are broken if the [x] value is mutated. *)
 module With_text : sig
 
-  type 'a t [@@deriving sexp, bin_io]
+  type 'a t [@@deriving sexp]
 
   (** Generates a [t] from the value by creating the text automatically using the provided
       s-expression converter. *)

@@ -38,7 +38,7 @@ let%test_module _ =
                 let of_binable = int_of_string
               end)
         end
-        type t = T.t [@@deriving bin_io, compare, sexp]
+        type t = T.t [@@deriving compare, sexp]
         let equal a b = Int.(=) 0 ([%compare: t] a b)
         let tests = int_tests
       end)
@@ -63,7 +63,7 @@ let%test_module _ =
               end)
         end
 
-        type t = int T.t [@@deriving bin_io, compare, sexp]
+        type t = int T.t [@@deriving compare, sexp]
         let equal a b = Int.(=) 0 ([%compare: t] a b)
         let tests = [
           (None, "()", "\000");
@@ -81,7 +81,7 @@ let%test_module _ =
             type ('a, 'b) t =
               | Left  of 'a
               | Right of 'b
-            [@@deriving bin_io, sexp]
+            [@@deriving sexp]
             let of_t = function
               | First  x -> Left  x
               | Second x -> Right x
@@ -101,7 +101,7 @@ let%test_module _ =
             end)
         end
 
-        type t = (int, string) T.t [@@deriving bin_io, compare, sexp]
+        type t = (int, string) T.t [@@deriving compare, sexp]
         let equal a b = Int.(=) 0 ([%compare: t] a b)
         let tests = [
           (First 1, "(Left 1)", "\000\001");
@@ -127,7 +127,7 @@ let%test_module _ =
 
     module Test_to_stringable = struct
       module T = struct
-        type t = int [@@deriving bin_io, sexp]
+        type t = int [@@deriving sexp]
       end
       include Sexpable.To_stringable.V1(T)
 

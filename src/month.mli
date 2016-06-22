@@ -11,10 +11,10 @@ type t =
 | Oct
 | Nov
 | Dec
-[@@deriving bin_io, sexp]
+[@@deriving sexp]
 
-include Comparable.S_binable with type t := t
-include Hashable.  S_binable with type t := t
+include Comparable.S with type t := t
+include Hashable.  S with type t := t
 
 (** [of_string s] accepts three-character abbreviations with 3 capitalizations (e.g. Jan,
     JAN, and jan) *)
@@ -41,6 +41,6 @@ module Stable : sig
   module V1 : sig
     type nonrec t = t =
       | Jan | Feb | Mar | Apr | May | Jun | Jul | Aug | Sep | Oct | Nov | Dec
-    [@@deriving sexp, bin_io, compare]
+    [@@deriving sexp, compare]
   end
 end

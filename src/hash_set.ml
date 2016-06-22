@@ -6,7 +6,7 @@ open With_return
 open Core_result.Export
 open Hash_set_intf
 
-module Binable = Binable0
+(* module Binable = Binable0 *)
 
 module Hashable = Hashtbl.Hashable
 
@@ -15,7 +15,7 @@ type 'a hash_set = 'a t
 type 'a elt = 'a
 
 module type S         = S         with type 'a hash_set = 'a t
-module type S_binable = S_binable with type 'a hash_set = 'a t
+(* module type S_binable = S_binable with type 'a hash_set = 'a t *)
 
 module Accessors = struct
 
@@ -184,7 +184,7 @@ module Poly = struct
 end
 
 module type Elt         = Hashtbl.Key
-module type Elt_binable = Hashtbl.Key_binable
+(* module type Elt_binable = Hashtbl.Key_binable *)
 
 module Make (Elt : Elt) = struct
 
@@ -203,13 +203,13 @@ module Make (Elt : Elt) = struct
 
 end
 
-module Make_binable (Elt : Elt_binable) = struct
+(* module Make_binable (Elt : Elt_binable) = struct
 
   include Make (Elt)
 
-  include Bin_prot.Utils.Make_iterable_binable (struct
+  (* include Bin_prot.Utils.Make_iterable_binable (struct
     type t = elt hash_set
-    type el = Elt.t [@@deriving bin_io]
+    type el = Elt.t
     let _ = bin_el
     let module_name = Some "Core.Std.Hash_set"
     let length = length
@@ -221,9 +221,9 @@ module Make_binable (Elt : Elt_binable) = struct
         add t v;
       done;
       t
-  end)
+  end) *)
 
-end
+end *)
 
 let%test_module "Set Intersection" = (module struct
   let hashable = {
@@ -267,4 +267,3 @@ let%test_module "Set Intersection" = (module struct
   let%test_unit "No intersection" =
     run_test ~expect:[] ["a";"b";"c";"d"] ["1";"2";"3";"4"]
 end)
-

@@ -129,7 +129,7 @@ module Cheap_option = struct
 
 end
 
-type 'a t = 'a Cheap_option.t Uniform_array.t [@@deriving bin_io, sexp]
+type 'a t = 'a Cheap_option.t Uniform_array.t [@@deriving sexp]
 
 let empty = Uniform_array.empty
 

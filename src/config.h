@@ -1,6 +1,0 @@
-#ifndef CORE_CONFIG_H
-#define CORE_CONFIG_H
-#define JSC_ARCH_SIXTYFOUR
-#undef JSC_ARCH_BIG_ENDIAN
-#undef JSC_POSIX_TIMERS
-#endif

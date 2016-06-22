@@ -69,23 +69,6 @@ module State = struct
     t
   ;;
 
-#ifdef JSC_ARCH_SIXTYFOUR
-  let int t bound =
-    if bound < (1 lsl 30)
-    then int t bound
-    else Int64.to_int (int64 t (Int64.of_int bound))
-
-  let%test_unit "random int above 2^30" =
-    let state = make [| 1 ; 2 ; 3 ; 4 ; 5 |] in
-    for _ = 1 to 100 do
-      let bound = 1 lsl 40 in
-      let n = int state bound in
-      if n < 0 || n >= bound then
-        failwith (Printf.sprintf "random result %d out of bounds (0,%d)" n (bound-1))
-    done
-
-  let%bench "random int above 2^30" = int default (1 lsl 40)
-#endif
 
   let%bench "random int below 2^30" = int default (1 lsl 20)
 

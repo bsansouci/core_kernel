@@ -1,39 +1,39 @@
-module Binable = Binable0
+(* module Binable = Binable0 *)
 module Map = Core_map
 module Sexp = Sexplib.Sexp
 
 let failwiths = Error.failwiths
 
 module type S = sig
-  type t [@@deriving bin_io, sexp]
+  type t [@@deriving sexp]
   include Stringable.S         with type t := t
-  include Comparable.S_binable with type t := t
-  include Hashable  .S_binable with type t := t
+  include Comparable.S with type t := t
+  include Hashable  .S with type t := t
   include Pretty_printer.S     with type t := t
 end
 
 module Make (T : sig
-  type t [@@deriving bin_io, compare, sexp]
+  type t [@@deriving compare, sexp]
   include Stringable.S with type t := t
   val hash : t -> int
   val module_name : string
 end) = struct
   include T
-  include Comparable.Make_binable (T)
-  include Hashable  .Make_binable (T)
+  include Comparable.Make (T)
+  include Hashable  .Make (T)
   include Pretty_printer.Register (T)
 end
 
 module Make_using_comparator (T : sig
-  type t [@@deriving bin_io, compare, sexp]
+  type t [@@deriving compare, sexp]
   include Comparator.S with type t := t
   include Stringable.S with type t := t
   val hash : t -> int
   val module_name : string
 end) = struct
   include T
-  include Comparable.Make_binable_using_comparator (T)
-  include Hashable  .Make_binable (T)
+  include Comparable.Make_using_comparator (T)
+  include Hashable  .Make (T)
   include Pretty_printer.Register (T)
 end
 
@@ -79,7 +79,7 @@ let%test_module _ = (module struct
 
     let module_name = "Core.Std.Identifiable.T"
 
-    type t = A | B [@@deriving bin_io, compare, sexp]
+    type t = A | B [@@deriving compare, sexp]
 
     let hash (t : t) = Hashtbl.hash t
 
@@ -100,7 +100,7 @@ let%test_module _ = (module struct
   let poly_equal = (=)
   let int_equal (i1 : int) i2 = poly_equal i1 i2
 
-  let%test_unit _ =
+  (* let%test_unit _ =
     let open T in
     let open Id in
     let check = Counts.check in
@@ -134,5 +134,5 @@ let%test_module _ = (module struct
     check [%here];
     assert (poly_equal A (Binable.of_bigstring (module T) bigstring));
     check [%here]
-  ;;
+  ;; *)
 end)

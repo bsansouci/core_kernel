@@ -22,6 +22,6 @@ val ( * ) : t -> t -> t
 
 module Stable : sig
   module V1 : sig
-    type nonrec t = t = Neg | Zero | Pos [@@deriving sexp, bin_io, compare]
+    type nonrec t = t = Neg | Zero | Pos [@@deriving sexp, compare]
   end
 end

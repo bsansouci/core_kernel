@@ -1,12 +1,12 @@
 open Sexplib.Std
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 include Caml.Gc
 
 module Sexp = Sexplib.Sexp
 let sprintf = Printf.sprintf
 
 module Stat = struct
-  type pretty_float = float [@@deriving compare, bin_io, sexp]
+  type pretty_float = float [@@deriving compare, sexp]
   let sexp_of_pretty_float f = Sexp.Atom (sprintf "%.2e" f)
 
   module T = struct
@@ -27,7 +27,7 @@ module Stat = struct
       compactions : int;
       top_heap_words : int;
       stack_size : int
-    } [@@deriving compare, bin_io, sexp, fields]
+    } [@@deriving compare, sexp, fields]
   end
 
   include T
@@ -82,7 +82,7 @@ module Control = struct
           the first-fit policy, which can be slower in some cases but can be better for
           programs with fragmentation problems.  Default: 0. *)
       mutable allocation_policy : int;
-    } [@@deriving compare, bin_io, sexp, fields]
+    } [@@deriving compare, sexp, fields]
   end
 
   include T

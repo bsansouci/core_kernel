@@ -5,7 +5,7 @@ type 'a t =
   { mutable elts : 'a list;
     mutable length : int;
   }
-[@@deriving bin_io, fields, sexp_of]
+[@@deriving fields, sexp_of]
 
 let sexp_of_t_internal = sexp_of_t
 let sexp_of_t = `Rebound_later

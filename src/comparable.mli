@@ -1,9 +1,9 @@
 open Comparable_intf
 
 module type Infix               = Infix
-module type Map_and_set_binable = Map_and_set_binable
+(* module type Map_and_set_binable = Map_and_set_binable *)
 module type S                   = S
-module type S_binable           = S_binable
+(* module type S_binable           = S_binable *)
 module type S_common            = S_common
 module type Validate            = Validate
 module type With_zero           = With_zero
@@ -73,28 +73,28 @@ module Make_using_comparator (T : sig
   with type t := T.t
   with type comparator_witness := T.comparator_witness
 
-module Make_binable (T : sig
-  type t [@@deriving bin_io, compare, sexp]
-end) : S_binable with type t := T.t
+(* module Make_binable (T : sig
+  type t [@@deriving compare, sexp]
+end) : S_binable with type t := T.t *)
 
-module Make_binable_using_comparator (T : sig
-    type t [@@deriving bin_io, sexp]
+(* module Make_binable_using_comparator (T : sig
+    type t [@@deriving sexp]
     include Comparator.S with type t := t
   end) : S_binable
   with type t := T.t
-  with type comparator_witness := T.comparator_witness
+  with type comparator_witness := T.comparator_witness *)
 
-module Map_and_set_binable (T : sig type t [@@deriving bin_io, compare, sexp] end)
-  : Map_and_set_binable with type t := T.t
+(* module Map_and_set_binable (T : sig type t [@@deriving compare, sexp] end)
+  : Map_and_set_binable with type t := T.t *)
 
-module Map_and_set_binable_using_comparator
+(* module Map_and_set_binable_using_comparator
     (T : sig
-       type t [@@deriving bin_io, compare, sexp]
+       type t [@@deriving compare, sexp]
        include Comparator.S with type t := t
      end)
   : Map_and_set_binable
     with type t := T.t
-    with type comparator_witness := T.comparator_witness
+    with type comparator_witness := T.comparator_witness *)
 
 module Poly (T : sig type t [@@deriving sexp] end) : S with type t := T.t
 

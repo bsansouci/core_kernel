@@ -12,7 +12,7 @@
             | Down
             | Left
             | Right
-          [@@deriving sexp, bin_io, compare, enumerate]
+          [@@deriving sexp, compare, enumerate]
         end
         include T
         module Total_map = Total_map.Make (T)
@@ -77,7 +77,7 @@ end
     have an [Applicative.S3]. *)
 
 module type Key = sig
-  type t [@@deriving sexp, bin_io, compare, enumerate]
+  type t [@@deriving sexp, compare, enumerate]
 end
 
 module type S = sig
@@ -87,7 +87,7 @@ module type S = sig
   type enumeration_witness
 
   type nonrec 'a t = (Key.t, 'a, comparator_witness, enumeration_witness) t
-  [@@deriving sexp, bin_io, compare]
+  [@@deriving sexp, compare]
 
   include Applicative with type 'a t := 'a t
 

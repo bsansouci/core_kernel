@@ -2,14 +2,14 @@ module List = StdLabels.List
 module String = StdLabels.String
 open Typerep_lib.Std
 open Sexplib.Std
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 
 module Random = Core_random
 
 let invalid_argf = Core_printf.invalid_argf
 
 module T = struct
-  type 'a t = 'a list [@@deriving sexp, bin_io, typerep]
+  type 'a t = 'a list [@@deriving sexp, typerep]
 end
 
 include T
@@ -1053,7 +1053,7 @@ let partition_tf t ~f =
 
 module Assoc = struct
 
-  type ('a, 'b) t = ('a * 'b) list [@@deriving bin_io, sexp, compare]
+  type ('a, 'b) t = ('a * 'b) list [@@deriving sexp, compare]
 
   let find t ?(equal=Poly.equal) key =
     match find t ~f:(fun (key', _) -> equal key key') with

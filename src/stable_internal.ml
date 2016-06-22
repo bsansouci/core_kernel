@@ -1,4 +1,4 @@
-include Bin_prot.Std
+(* include Bin_prot.Std *)
 (* Constrain Sexplib.Std to remove the Hashtbl module (and some other modules we don't
    care about, e.g. Ratio), which would later conflict with Hashtbl in
    Stable_containers. *)
@@ -32,11 +32,11 @@ include (Sexplib.Std : sig
   val sexp_of_unit : unit -> Sexplib.Sexp.t
 end)
 
-type 'a sexp_option = 'a Std_internal.sexp_option [@@deriving bin_io, compare]
-type 'a sexp_list   = 'a Std_internal.sexp_list   [@@deriving bin_io, compare]
+type 'a sexp_option = 'a Std_internal.sexp_option [@@deriving compare]
+type 'a sexp_list   = 'a Std_internal.sexp_list   [@@deriving compare]
 
 (* Hack, because Sexp isn't Binable *)
 module Sexp = struct
-  type t = Sexplib.Sexp.t = Atom of string | List of t list [@@deriving bin_io, compare]
+  type t = Sexplib.Sexp.t = Atom of string | List of t list [@@deriving compare]
   include (Sexplib.Sexp : module type of Sexplib.Sexp with type t := t)
 end

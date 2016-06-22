@@ -36,7 +36,7 @@ end
 module type Hexable = sig
   type t
   module Hex : sig
-    type nonrec t = t [@@deriving bin_io, sexp, compare, typerep]
+    type nonrec t = t [@@deriving sexp, compare, typerep]
 
     include Stringable.S with type t := t
 
@@ -45,7 +45,7 @@ module type Hexable = sig
 end
 
 module type S = sig
-  type t [@@deriving bin_io, sexp, typerep]
+  type t [@@deriving sexp, typerep]
 
   include Floatable.S              with type t := t
   include Intable.S                with type t := t

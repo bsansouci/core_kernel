@@ -148,7 +148,7 @@ module Serialized = struct
     { num_keys : int
     ; alist    : ('key * 'data) list
     }
-  [@@deriving bin_io, sexp]
+  [@@deriving sexp]
 end
 
 let to_serialized t =
@@ -343,7 +343,7 @@ let%test_module _ = (module struct
 end)
 
 module With_key (Key : sig
-    type t [@@deriving bin_io, sexp]
+    type t [@@deriving sexp]
     val to_int : t -> int
   end) = struct
 
@@ -378,7 +378,7 @@ module With_key (Key : sig
   ;;
 
   include Binable.Of_binable1
-      (struct type 'data t = (Key.t, 'data) Serialized.t [@@deriving bin_io] end)
+      (struct type 'data t = (Key.t, 'data) Serialized.t end)
       (struct
         type 'data t = 'data table
 
@@ -632,7 +632,7 @@ let%test_module _ =
           (map t ~f:(fun x -> x + 1))
           (mapi t ~f:(fun ~key:_ ~data -> data + 1));
         let module T = struct
-          type t = int Table.t [@@deriving bin_io, sexp]
+          type t = int Table.t [@@deriving sexp]
         end in
         let binable_m = (module T : Binable.S with type t = T.t) in
         ensure_equal "binio" t (Binable.of_string binable_m (Binable.to_string binable_m t))

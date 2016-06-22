@@ -441,9 +441,9 @@ let of_array arr =
   t
 ;;
 
-include Bin_prot.Utils.Make_iterable_binable1 (struct
+(* include Bin_prot.Utils.Make_iterable_binable1 (struct
   type nonrec 'a t = 'a t
-  type 'a el = 'a [@@deriving bin_io]
+  type 'a el = 'a
 
   let module_name  = Some "Core_kernel.Std.Deque"
   let length       = length
@@ -455,7 +455,7 @@ include Bin_prot.Utils.Make_iterable_binable1 (struct
       enqueue_back t x
     done;
     t
-end)
+end) *)
 
 let t_of_sexp f sexp = of_array (Array.t_of_sexp f sexp)
 let sexp_of_t f t    = Array.sexp_of_t f (to_array t)
@@ -474,7 +474,7 @@ let front_index_exn t =
   apparent_front_index_when_not_empty t
 ;;
 
-module Binary_searchable = Binary_searchable.Make1 (struct
+(* module Binary_searchable = Binary_searchable.Make1 (struct
   type nonrec 'a t = 'a t
 
   let get t i = get t (front_index_exn t + i)
@@ -483,7 +483,7 @@ module Binary_searchable = Binary_searchable.Make1 (struct
   module For_test = struct
     let of_array = of_array
   end
-end)
+end) *)
 
 (* The "stable" indices used in this module make the application of the
    [Binary_searchable] functor awkward.  We need to be sure to translate incoming
@@ -511,7 +511,7 @@ let binary_search_segmented ?pos ?len t ~segment_of how =
   | Some untranslated_i -> Some (t.apparent_front_index + untranslated_i)
 ;;
 
-let%test_module _ = (module struct
+(* let%test_module _ = (module struct
   let binary_search = binary_search ~compare:Int.compare
   let t = of_array [| 1; 2; 3; 4 |]
   let%test _ = binary_search t        `First_equal_to 2 = Some 1
@@ -527,9 +527,9 @@ let%test_module _ = (module struct
   let%test _ = binary_search t        `First_equal_to 0 = None
   let%test _ = binary_search t ~pos:2 `First_equal_to 2 = None
   let%test _ = binary_search t ~pos:2 `First_equal_to 3 = Some 2
-end)
+end) *)
 
-let%test_module _ = (module struct
+(* let%test_module _ = (module struct
   let%test_unit _ =
     let q = create () in
     let bin_alpha _ = assert false in
@@ -750,4 +750,4 @@ let%bench_module "Deque" = (module struct
     let t = create () in
     let () = enqueue_back t 2 in
     fun () -> ignore (peek_back t : _ option)
-end)
+end) *)

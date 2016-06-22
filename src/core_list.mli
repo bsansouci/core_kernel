@@ -5,7 +5,7 @@
     comparison functions on lists are lexicographic.
 *)
 
-type 'a t = 'a list [@@deriving bin_io, compare, sexp, typerep]
+type 'a t = 'a list [@@deriving compare, sexp, typerep]
 
 include Container.S1      with type 'a t := 'a t
 include Monad.S           with type 'a t := 'a t
@@ -360,7 +360,7 @@ val filter_opt : 'a option t -> 'a t
 *)
 module Assoc : sig
 
-  type ('a, 'b) t = ('a * 'b) list [@@deriving bin_io, sexp, compare]
+  type ('a, 'b) t = ('a * 'b) list [@@deriving sexp, compare]
 
   val add      : ('a, 'b) t -> ?equal:('a -> 'a -> bool) -> 'a -> 'b -> ('a, 'b) t
   val find     : ('a, 'b) t -> ?equal:('a -> 'a -> bool) -> 'a -> 'b option

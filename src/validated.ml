@@ -60,7 +60,7 @@ end
 let%test_module _ = (module struct
 
   module Positive_int = struct
-    type t = int [@@deriving bin_io, sexp]
+    type t = int [@@deriving sexp]
     let validate t =
       if t > 0
       then Validate.pass

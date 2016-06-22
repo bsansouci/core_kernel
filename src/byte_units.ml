@@ -27,7 +27,7 @@ end
 
 module Measure = struct
   type t = [ `Bytes | `Kilobytes | `Megabytes | `Gigabytes | `Words ]
-    [@@deriving sexp, bin_io]
+    [@@deriving sexp]
 
   let bytes = function
     | `Bytes -> 1.
@@ -40,7 +40,7 @@ end
 
 module Stable = struct
   module V1 = struct
-    type t = float [@@deriving bin_io, compare]
+    type t = float [@@deriving compare]
 
     let scale = Float.( * )
 

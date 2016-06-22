@@ -1,11 +1,11 @@
 open Typerep_lib.Std
 open Sexplib.Std
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 
 let invalid_argf = Core_printf.invalid_argf
 
 module T = struct
-  type t = bool [@@deriving bin_io, sexp, typerep]
+  type t = bool [@@deriving sexp, typerep]
   let compare (t : t) t' = compare t t'
 
   (* we use physical equality here because for bools it is the same *)
@@ -59,7 +59,7 @@ include Replace_polymorphic_compare
    a bool in it that needs a custom hash function. *)
 include Hashable.Make (T)
 
-include Comparable.Map_and_set_binable (T)
+include Comparable.S (T)
 include Comparable.Validate (T)
 
 let gen =

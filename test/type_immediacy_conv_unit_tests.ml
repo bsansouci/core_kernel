@@ -4,7 +4,7 @@ open! Core_kernel.Std
 
 let%test_module _ = (module struct
 
-  module Typerep_obj = Typerep_lib.Std.Typerep_obj
+  module Typerep_obj = Typerep.Std.Typerep_obj
 
   type 'a t = {
     int_as_value      : int -> 'a option;

@@ -1,10 +1,10 @@
 module type Applicative                        = Applicative.S
-module type Binable                            = Binable0.S
+(* module type Binable                            = Binable0.S *)
 module type Comparable                         = Comparable.S
-module type Comparable_binable                 = Comparable.S_binable
+(* module type Comparable_binable                 = Comparable.S_binable *)
 module type Floatable                          = Floatable.S
 module type Hashable                           = Hashable.S
-module type Hashable_binable                   = Hashable.S_binable
+(* module type Hashable_binable                   = Hashable.S_binable *)
 module type Identifiable                       = Identifiable.S
 module type Infix_comparators                  = Comparable.Infix
 module type Intable                            = Intable.S

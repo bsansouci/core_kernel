@@ -1,7 +1,7 @@
 (** An extension of the standard StringLabels. If you open! Core.Std, you'll get
     these in the String module. *)
 
-type t = string [@@deriving bin_io, sexp, typerep]
+type t = string [@@deriving sexp, typerep]
 
 (** [Caseless] compares and hashes strings ignoring case, so that for example
     [Caseless.equal "OCaml" "ocaml"] and [Caseless.("apple" < "Banana")] are [true], and
@@ -10,8 +10,8 @@ type t = string [@@deriving bin_io, sexp, typerep]
     functions, so that for example [Caseless.is_suffix "OCaml" ~suffix:"AmL"] and
     [Caseless.is_prefix "OCaml" ~prefix:"oc"] are [true]. *)
 module Caseless : sig
-  include Comparable.S_binable with type t := t
-  include Hashable.  S_binable with type t := t
+  include Comparable.S with type t := t
+  include Hashable.  S with type t := t
 
   val is_suffix : t -> suffix:t -> bool
   val is_prefix : t -> prefix:t -> bool
@@ -424,4 +424,3 @@ module Stable : sig
       with type comparator_witness := comparator_witness
   end
 end
-

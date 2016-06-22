@@ -1,4 +1,4 @@
-module Binable = Binable0
+(* module Binable = Binable0 *)
 module Hashtbl = Core_hashtbl
 
 module type S = sig
@@ -19,7 +19,7 @@ module Make (T : Hashtbl.Key) : S with type t := T.t = struct
   let hashable = Table.hashable
 end
 
-module type S_binable = sig
+(* module type S_binable = sig
   type t
   val hash : t -> int
   val hashable : t Hashtbl.Hashable.t
@@ -35,4 +35,4 @@ module Make_binable (T : Hashtbl.Key_binable) : S_binable with type t := T.t = s
 
   include T
   let hashable = Table.hashable
-end
+end *)

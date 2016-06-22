@@ -10,7 +10,7 @@
 
     All operations are amortized O(1) with a small constant. *)
 
-type 'a t [@@deriving bin_io, sexp]
+type 'a t [@@deriving sexp]
 
 include Binary_searchable.S1 with type 'a t := 'a t
 include Container.        S1 with type 'a t := 'a t

@@ -369,9 +369,9 @@ module Stable = struct
                  (of_list [1;2;3]))))
     ;;
 
-    include Bin_prot.Utils.Make_iterable_binable1 (struct
+    (* include Bin_prot.Utils.Make_iterable_binable1 (struct
         type nonrec 'a t = 'a t
-        type 'a el = 'a [@@deriving bin_io]
+        type 'a el = 'a
         let module_name = Some "Core.Fdeque"
         let length = length
         let iter t ~f = List.iter (to_list t) ~f
@@ -386,7 +386,7 @@ module Stable = struct
                 loop next (enqueue_back acc x) (n + 1)
               end
           in loop next empty 0
-      end)
+      end) *)
 
   end
 

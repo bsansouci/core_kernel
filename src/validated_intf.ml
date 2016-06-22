@@ -28,7 +28,7 @@ module type Raw = sig
 end
 
 module type Raw_binable = sig
-  type t [@@deriving bin_io]
+  type t
 
   include Raw with type t := t
 
@@ -61,7 +61,7 @@ end
 
 module type S_binable = sig
   include S
-  include sig type t = (raw, witness) validated [@@deriving bin_io] end with type t := t
+  include sig type t = (raw, witness) validated end with type t := t
 end
 
 module type Validated = sig

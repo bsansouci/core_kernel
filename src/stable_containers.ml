@@ -8,13 +8,13 @@ module Core_hashtbl = Hashtbl
 module Core_hash_set = Hash_set
 
 module Hashtbl = struct
-  module V1 (Elt : Hashtbl.Key_binable) : sig
-    type 'a t = (Elt.t, 'a) Hashtbl.t [@@deriving sexp, bin_io]
-  end = Hashtbl.Make_binable (Elt)
+  module V1 (Elt : Hashtbl.Key) : sig
+    type 'a t = (Elt.t, 'a) Hashtbl.t [@@deriving sexp]
+  end = Hashtbl.Make (Elt)
 
   let%test_module "Hashtbl.V1" = (module Stable_unit_test.Make_unordered_container (struct
     module Table = V1 (Int)
-    type t = string Table.t [@@deriving sexp, bin_io]
+    type t = string Table.t [@@deriving sexp]
 
     let equal t1 t2 = Int.Table.equal t1 t2 String.equal
 
@@ -42,9 +42,9 @@ module Hashtbl = struct
 end
 
 module Hash_set = struct
-  module V1 (Elt : Hash_set.Elt_binable) : sig
-    type t = Elt.t Hash_set.t [@@deriving sexp, bin_io]
-  end = Hash_set.Make_binable (Elt)
+  module V1 (Elt : Hash_set.Elt) : sig
+    type t = Elt.t Hash_set.t [@@deriving sexp]
+  end = Hash_set.Make (Elt)
 
   let%test_module "Hash_set.V1" = (module Stable_unit_test.Make_unordered_container (struct
     include V1 (Int)
@@ -77,7 +77,7 @@ end
 
 module Map = struct
   module V1 (Key : sig
-      type t [@@deriving bin_io, sexp]
+      type t [@@deriving sexp]
       include Comparator.S with type t := t
     end) : sig
     type 'a t = (Key.t, 'a, Key.comparator_witness) Map.t
@@ -90,7 +90,7 @@ module Map = struct
 
   let%test_module "Map.V1" = (module Stable_unit_test.Make (struct
     module Map = V1 (Int)
-    type t = string Map.t [@@deriving sexp, bin_io]
+    type t = string Map.t [@@deriving sexp]
 
     let equal = Int.Map.equal String.equal
 
@@ -106,11 +106,11 @@ end
 module Set = struct
   module V1 (
       Elt : sig
-        type t [@@deriving bin_io, sexp]
+        type t [@@deriving sexp]
         include Comparator.S with type t := t
       end
     ) : sig
-    type t = (Elt.t, Elt.comparator_witness) Set.t [@@deriving sexp, bin_io, compare]
+    type t = (Elt.t, Elt.comparator_witness) Set.t [@@deriving sexp, compare]
   end =
     Set.Stable.V1.Make (struct
       include Elt
@@ -138,15 +138,15 @@ module Hashable = struct
       type key
 
       module Table : sig
-        type 'a t = (key, 'a) Core_hashtbl.t [@@deriving sexp, bin_io]
+        type 'a t = (key, 'a) Core_hashtbl.t [@@deriving sexp]
       end
 
       module Hash_set : sig
-        type t = key Core_hash_set.t [@@deriving sexp, bin_io]
+        type t = key Core_hash_set.t [@@deriving sexp]
       end
     end
 
-    module Make (Key : Core_hashtbl.Key_binable) : S with type key := Key.t = struct
+    module Make (Key : Core_hashtbl.Key) : S with type key := Key.t = struct
       module Table = Hashtbl.V1 (Key)
       module Hash_set = Hash_set.V1 (Key)
     end

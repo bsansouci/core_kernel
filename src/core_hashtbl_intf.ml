@@ -1,7 +1,7 @@
 open Sexplib
 
 
-module Binable = Binable0
+(* module Binable = Binable0 *)
 
 module type Key = sig
   type t [@@deriving compare, sexp]
@@ -11,10 +11,10 @@ module type Key = sig
   val hash : t -> int
 end
 
-module type Key_binable = sig
-  type t [@@deriving bin_io]
+(* module type Key_binable = sig
+  type t
   include Key with type t := t
-end
+end *)
 
 module Hashable = struct
   type 'a t =
@@ -375,10 +375,10 @@ module type S = sig
 
 end
 
-module type S_binable = sig
+(* module type S_binable = sig
   include S
   include Binable.S1 with type 'v t := 'v t
-end
+end *)
 
 module type Hashtbl = sig
 
@@ -410,7 +410,7 @@ module type Hashtbl = sig
 
   module Poly : sig
 
-    type ('a, 'b) t [@@deriving bin_io, sexp]
+    type ('a, 'b) t [@@deriving sexp]
 
     val hashable : 'a Hashable.t
 
@@ -430,11 +430,11 @@ module type Hashtbl = sig
   end with type ('a, 'b) t = ('a, 'b) t
 
   module type Key         = Key
-  module type Key_binable = Key_binable
+  (* module type Key_binable = Key_binable *)
 
   module type S         = S         with type ('a, 'b) hashtbl = ('a, 'b) t
-  module type S_binable = S_binable with type ('a, 'b) hashtbl = ('a, 'b) t
+  (* module type S_binable = S_binable with type ('a, 'b) hashtbl = ('a, 'b) t *)
 
   module Make         (Key : Key        ) : S         with type key = Key.t
-  module Make_binable (Key : Key_binable) : S_binable with type key = Key.t
+  (* module Make_binable (Key : Key_binable) : S_binable with type key = Key.t *)
 end

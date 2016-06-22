@@ -1,6 +1,6 @@
 module Stable = struct
   module V1 = struct
-    type t = Nothing0.t [@@deriving sexp, bin_io, compare, enumerate]
+    type t = Nothing0.t [@@deriving sexp, compare, enumerate]
   end
 end
 
@@ -25,4 +25,3 @@ end)
 
 let unreachable_code (_ : t) =
   failwith "Nothing.unreachable_code: impossible"
-

@@ -3,7 +3,7 @@
 
 
 module type Arg = sig
-  type t [@@deriving sexp, bin_io]
+  type t [@@deriving sexp]
   val equal : t -> t -> bool
 
   (** [tests] is a list of (value, sexp-representation, bin-io-representation) triples.
@@ -24,7 +24,7 @@ module Unordered_container_test = struct
 end
 
 module type Unordered_container_arg = sig
-  type t [@@deriving sexp, bin_io]
+  type t [@@deriving sexp]
   val equal : t -> t -> bool
   val tests : (t * Unordered_container_test.t) list
 end

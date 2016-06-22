@@ -106,13 +106,13 @@ let sexp_of_t sexp_of_a t = [%sexp_of: a list] (to_list t)
 
 let t_of_sexp a_of_sexp sexp = of_list ([%of_sexp: a list] sexp)
 
-include
+(* include
   Bin_prot.Utils.Make_binable1 (struct
     type nonrec 'a t = 'a t
     module Binable = Core_list
     let to_binable = to_list
     let of_binable = of_list
-  end)
+  end) *)
 
 let resize t size =
   let arr = Option_array.create ~len:size in

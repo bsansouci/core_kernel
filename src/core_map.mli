@@ -351,7 +351,7 @@ val merge
 
 module Symmetric_diff_element : sig
   type ('k, 'v) t = 'k * [ `Left of 'v | `Right of 'v | `Unequal of 'v * 'v ]
-  [@@deriving bin_io, compare, sexp]
+  [@@deriving compare, sexp]
 end
 
 (** [symmetric_diff t1 t2 ~data_equal] returns a list of changes between [t1] and [t2].
@@ -474,7 +474,7 @@ module Poly : sig
       with type ('a, 'b) tree := ('a, 'b) t
   end
 
-  type ('a, +'b) t = ('a, 'b, Comparator.Poly.comparator_witness) map [@@deriving bin_io, sexp, compare]
+  type ('a, +'b) t = ('a, 'b, Comparator.Poly.comparator_witness) map [@@deriving sexp, compare]
 
   include Creators_and_accessors2
     with type ('a, 'b) t    := ('a, 'b) t
@@ -483,15 +483,15 @@ end
   with type ('a, 'b, 'c) map = ('a, 'b, 'c) t
 
 module type Key         = Key
-module type Key_binable = Key_binable
+(* module type Key_binable = Key_binable *)
 
 module type S = S
   with type ('a, 'b, 'c) map  := ('a, 'b, 'c) t
   with type ('a, 'b, 'c) tree := ('a, 'b, 'c) Tree.t
 
-module type S_binable = S_binable
+(* module type S_binable = S_binable
   with type ('a, 'b, 'c) map  := ('a, 'b, 'c) t
-  with type ('a, 'b, 'c) tree := ('a, 'b, 'c) Tree.t
+  with type ('a, 'b, 'c) tree := ('a, 'b, 'c) Tree.t *)
 
 module Make (Key : Key) : S with type Key.t = Key.t
 
@@ -503,15 +503,15 @@ end)
     with type Key.t                  = Key.t
     with type Key.comparator_witness = Key.comparator_witness
 
-module Make_binable (Key : Key_binable) : S_binable with type Key.t = Key.t
+(* module Make_binable (Key : Key_binable) : S_binable with type Key.t = Key.t *)
 
-module Make_binable_using_comparator (Key : sig
-  type t [@@deriving bin_io, sexp]
+(* module Make_binable_using_comparator (Key : sig
+  type t [@@deriving sexp]
   include Comparator.S with type t := t
 end)
   : S_binable
     with type Key.t                  = Key.t
-    with type Key.comparator_witness = Key.comparator_witness
+    with type Key.comparator_witness = Key.comparator_witness *)
 
 (** The following functors may be used to define stable modules *)
 module Stable : sig

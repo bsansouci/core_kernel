@@ -3,7 +3,7 @@ module Stable = struct
     type ('a, 'b) t = ('a, 'b) OcamlResult.Result.t =
     | Ok of 'a
     | Error of 'b
-    [@@deriving sexp, bin_io, compare]
+    [@@deriving sexp, compare]
 
     let map x ~f1 ~f2 =
       match x with
@@ -14,9 +14,9 @@ module Stable = struct
 
   module V1_stable_unit_test = struct
     open Sexplib.Std
-    open Bin_prot.Std
+    (* open Bin_prot.Std *)
 
-    type t = (string, int) V1.t [@@deriving sexp, bin_io, compare]
+    type t = (string, int) V1.t [@@deriving sexp, compare]
 
     let equal = (=)
 
@@ -130,5 +130,3 @@ let combine t1 t2 ~ok ~err =
   | Ok    ok1 , Ok    ok2  -> Ok    (ok  ok1  ok2 )
   | Error err1, Error err2 -> Error (err err1 err2)
 ;;
-
-

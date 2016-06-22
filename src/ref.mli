@@ -1,7 +1,7 @@
 open Common
 
 type 'a t = 'a ref = { mutable contents : 'a }
-[@@deriving bin_io, compare, sexp, typerep]
+[@@deriving compare, sexp, typerep]
 
 include Container.S1 with type 'a t := 'a t
 
@@ -22,7 +22,7 @@ val replace : 'a t -> ('a -> 'a) -> unit
 val set_temporarily : 'a t -> 'a -> f:(unit -> 'b) -> 'b
 
 module Permissioned : sig
-  type ('a, -'perms) t [@@deriving sexp, bin_io]
+  type ('a, -'perms) t [@@deriving sexp]
 
   include Container.S1_permissions
     with type ('a, 'perms) t := ('a, 'perms) t

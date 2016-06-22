@@ -57,7 +57,7 @@ include struct
 end
 
 module type Key = sig
-  type t [@@deriving sexp, bin_io, compare, enumerate]
+  type t [@@deriving sexp, compare, enumerate]
 end
 
 module type S = sig
@@ -67,7 +67,7 @@ module type S = sig
   type enumeration_witness
 
   type nonrec 'a t = (Key.t, 'a, comparator_witness, enumeration_witness) t
-  [@@deriving sexp, bin_io, compare]
+  [@@deriving sexp, compare]
 
   include Applicative with type 'a t := 'a t
 
@@ -115,12 +115,12 @@ module Make_using_comparator (Key : sig
     validate_map_from_serialization t;
     t
 
-  include Bin_prot.Utils.Make_binable1 (struct
+  (* include Bin_prot.Utils.Make_binable1 (struct
     type nonrec 'a t = 'a t
     module Binable = Key.Map
     let to_binable x = x
     let of_binable x = validate_map_from_serialization x; x
-  end)
+  end) *)
 
   let create f =
     List.fold Key.all ~init:Key.Map.empty ~f:(fun t key ->

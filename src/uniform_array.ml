@@ -84,11 +84,11 @@ include Sexpable.Of_sexpable1(Core_array)(struct
     let of_sexpable = of_array
   end)
 
-include Binable.Of_binable1(Core_array)(struct
+(* include Binable.Of_binable1(Core_array)(struct
     type nonrec 'a t = 'a t
     let to_binable = to_array
     let of_binable = of_array
-  end)
+  end) *)
 
 module Sequence = struct
   let length = length

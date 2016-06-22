@@ -9,7 +9,7 @@ let%test_module _ = (module (struct
 
   let () = show_messages := false
 
-  type nonrec 'a t = 'a t [@@deriving bin_io, sexp]
+  type nonrec 'a t = 'a t [@@deriving sexp]
 
   let capacity = capacity
   let set_capacity = set_capacity

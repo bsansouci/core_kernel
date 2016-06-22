@@ -1,11 +1,11 @@
 open Typerep_lib.Std
 open Sexplib.Std
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 
 open Nativeint
 
 module T = struct
-  type t = nativeint [@@deriving sexp, bin_io, typerep]
+  type t = nativeint [@@deriving sexp, typerep]
   let compare (x : t) y = compare x y
   let equal (x : t) y = x = y
   let hash (x : t) = Hashtbl.hash x
@@ -74,8 +74,8 @@ end
 
 include Replace_polymorphic_compare
 
-include Hashable.Make_binable (T)
-include Comparable.Map_and_set_binable (T)
+include Hashable.Make (T)
+include Comparable.Make (T)
 
 let ( / ) = div
 let ( * ) = mul
@@ -112,7 +112,7 @@ include Conv.Make (T)
 
 include Conv.Make_hex(struct
 
-  type t = nativeint [@@deriving bin_io, compare, typerep]
+  type t = nativeint [@@deriving compare, typerep]
 
   let zero = zero
   let neg = (~-)

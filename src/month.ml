@@ -54,11 +54,11 @@ module Stable = struct
       | Nov -> 11
       | Dec -> 12
 
-    include Binable.Stable.Of_binable.V1 (Core_int) (struct
+    (* include Binable.Stable.Of_binable.V1 (Core_int) (struct
       type nonrec t = t
       let to_binable t = to_int t - 1
       let of_binable i = of_int_exn (i + 1)
-    end)
+    end) *)
   end
 
   let%test_module "Month.V1" = (module Stable_unit_test.Make(struct
@@ -125,11 +125,11 @@ module T = struct
 end
 include T
 
-include (Hashable.Make_binable (struct
+include (Hashable.Make (struct
   include T
-end) : Hashable.S_binable with type t := t)
+end) : Hashable.S with type t := t)
 
-include Comparable.Make_binable (struct
+include Comparable.Make (struct
   include T
 
   (* In 108.06a and earlier, months in sexps of Maps and Sets were raw ints.  From 108.07

@@ -3,9 +3,9 @@
    Please avoid adding new dependencies. *)
 
 open Sexplib.Std
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 
-module Binable = Binable0
+(* module Binable = Binable0 *)
 
 module Conv = Sexplib.Conv
 
@@ -14,9 +14,9 @@ module List = Core_list0
 module Sexp = struct
   include Sexplib.Sexp
   include (struct
-    type t = Sexplib.Sexp.t = Atom of string | List of t list [@@deriving bin_io, compare]
+    type t = Sexplib.Sexp.t = Atom of string | List of t list [@@deriving compare]
   end : sig
-    type t [@@deriving bin_io, compare]
+    type t [@@deriving compare]
   end with type t := t)
 end
 
@@ -30,7 +30,7 @@ module Binable_exn = struct
         type t = exn [@@deriving sexp_of]
       end
       include T
-      include Binable.Stable.Of_binable.V1 (Sexp) (struct
+      (* include Binable.Stable.Of_binable.V1 (Sexp) (struct
           include T
 
           exception Exn of Sexp.t
@@ -48,7 +48,7 @@ module Binable_exn = struct
 
           let to_binable t = t |> [%sexp_of: t]
           let of_binable sexp = Exn sexp
-        end)
+        end) *)
     end
   end
 end
@@ -59,7 +59,7 @@ module Message = struct
 
     module Source_code_position = struct
       module V1 = struct
-        type t = Source_code_position0.Stable.V1.t [@@deriving bin_io]
+        type t = Source_code_position0.Stable.V1.t
 
         (* [sexp_of_t] as defined here is unstable; this is OK because there is no
            [t_of_sexp].  [sexp_of_t] is only used to produce a sexp that is never
@@ -79,7 +79,7 @@ module Message = struct
         | Tag_arg             of string * Sexp.t * t
         | Of_list             of int option * t list
         | With_backtrace      of t * string (* backtrace *)
-      [@@deriving bin_io, sexp_of]
+      [@@deriving sexp_of]
     end
   end
 
@@ -175,18 +175,18 @@ module Stable_v2 = struct
       [%compare: Sexp.t] (t1 |> [%sexp_of: t]) (t2 |> [%sexp_of: t])
     ;;
 
-    include Binable.Stable.Of_binable.V1 (Message.Stable.V2) (struct
+    (* include Binable.Stable.Of_binable.V1 (Message.Stable.V2) (struct
         type nonrec t = t
         let to_binable = to_message
         let of_binable = of_message
-      end)
+      end) *)
   end
   include T
   include Comparator.Stable.V1.Make (T)
 end
 
 include (Stable_v2 : sig
-           type t [@@deriving bin_io, compare, sexp]
+           type t [@@deriving compare, sexp]
          end with type t := t)
 
 let to_string_hum t =
@@ -282,11 +282,11 @@ module Stable = struct
     include T
     include Comparator.Stable.V1.Make (T)
 
-    include Binable.Stable.Of_binable.V1 (Sexp) (struct
+    (* include Binable.Stable.Of_binable.V1 (Sexp) (struct
         type nonrec t = t
         let to_binable = sexp_of_t
         let of_binable = t_of_sexp
-      end)
+      end) *)
   end
 end
 
@@ -355,4 +355,3 @@ end)
 
 let pp ppf t = Format.pp_print_string ppf (to_string_hum t)
 let () = Pretty_printer.register "Core_kernel.Info.pp"
-

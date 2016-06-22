@@ -2,7 +2,7 @@ open Std_internal
 
 module type Contents =
 sig
-  type t [@@deriving bin_io, sexp]
+  type t [@@deriving sexp]
   include Comparable with type t := t
   val zero : t
   val (+) : t -> t -> t
@@ -11,7 +11,7 @@ end
 
 module type S = sig
   type contents
-  type t [@@deriving bin_io, sexp]
+  type t [@@deriving sexp]
 
   (* Fails if init_level is not within bounds [zero;size]. *)
   val create : size:contents -> init_level:contents -> t
@@ -38,13 +38,13 @@ end
 module Make (C: Contents): (S with type contents = C.t) =
 struct
   type contents = C.t
-  [@@deriving sexp, bin_io]
+  [@@deriving sexp]
 
   type t = {
     mutable level : contents;
     size : contents;
   }
-  [@@deriving sexp, bin_io]
+  [@@deriving sexp]
 
   let create ~size ~init_level =
     let error msg =

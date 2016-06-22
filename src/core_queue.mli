@@ -18,7 +18,7 @@
 *)
 
 
-type 'a t [@@deriving bin_io, compare, sexp]
+type 'a t [@@deriving compare, sexp]
 
 include Binary_searchable.S1 with type 'a t := 'a t
 include Container.        S1 with type 'a t := 'a t
@@ -104,4 +104,3 @@ val capacity : _ t -> int
     copying the queue elements over.  [set_capacity] may decrease the capacity of [t], if
     [c < capacity t]. *)
 val set_capacity : _ t -> int -> unit
-

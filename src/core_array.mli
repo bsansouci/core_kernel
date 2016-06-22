@@ -1,6 +1,6 @@
 open Perms.Export
 
-type 'a t = 'a array [@@deriving bin_io, compare, sexp, typerep]
+type 'a t = 'a array [@@deriving compare, sexp, typerep]
 
 include Binary_searchable.S1 with type 'a t := 'a t
 
@@ -89,23 +89,25 @@ val fill : 'a t -> pos:int -> len:int -> 'a -> unit
 include Blit.S1 with type 'a t := 'a t
 
 module Int : sig
-  type nonrec t = int t [@@deriving bin_io, compare, sexp]
+  type nonrec t = int t [@@deriving compare, sexp]
 
   include Blit.S with type t := t
 
-  external unsafe_blit
+  (* val unsafe_blit : src:t -> src_pos:int -> dst:t -> dst_pos:int -> len:int -> unit *)
+  (* external unsafe_blit
     : src:t -> src_pos:int -> dst:t -> dst_pos:int -> len:int -> unit
-    = "core_array_unsafe_int_blit" "noalloc"
+    = "core_array_unsafe_int_blit" "noalloc" *)
 end
 
 module Float : sig
-  type nonrec t = float t [@@deriving bin_io, compare, sexp]
+  type nonrec t = float t [@@deriving compare, sexp]
 
   include Blit.S with type t := t
 
-  external unsafe_blit
+  (* val unsafe_blit : src:t -> src_pos:int -> dst:t -> dst_pos:int -> len:int -> unit *)
+  (* external unsafe_blit
     : src:t -> src_pos:int -> dst:t -> dst_pos:int -> len:int -> unit
-    = "core_array_unsafe_float_blit" "noalloc"
+    = "core_array_unsafe_float_blit" "noalloc" *)
 end
 
 (** [Array.of_list l] returns a fresh array containing the elements of [l]. *)
@@ -334,26 +336,29 @@ module Permissioned : sig
       information about the length of an array can leak out even if you only have write
       permissions since you can catch out-of-bounds errors.
   *)
-  type ('a, -'perms) t [@@deriving bin_io, compare, sexp]
+  type ('a, -'perms) t [@@deriving compare, sexp]
 
   module Int : sig
-    type nonrec -'perms t = (int, 'perms) t [@@deriving bin_io, compare, sexp]
+    type nonrec -'perms t = (int, 'perms) t [@@deriving compare, sexp]
 
     include Blit.S_permissions with type 'perms t := 'perms t
 
-    external unsafe_blit
+    (* val unsafe_blit : src:[> read] t -> src_pos:int -> dst:[> write] t -> dst_pos:int -> len:int -> unit *)
+
+    (* external unsafe_blit
       : src:[> read] t -> src_pos:int -> dst:[> write] t -> dst_pos:int -> len:int -> unit
-      = "core_array_unsafe_int_blit" "noalloc"
+      = "core_array_unsafe_int_blit" "noalloc" *)
   end
 
   module Float : sig
-    type nonrec -'perms t = (float, 'perms) t [@@deriving bin_io, compare, sexp]
+    type nonrec -'perms t = (float, 'perms) t [@@deriving compare, sexp]
 
     include Blit.S_permissions with type 'perms t := 'perms t
 
-    external unsafe_blit
+    (* val unsafe_blit : src:[> read] t -> src_pos:int -> dst:[> write] t -> dst_pos:int -> len:int -> unit *)
+    (* external unsafe_blit
       : src:[> read] t -> src_pos:int -> dst:[> write] t -> dst_pos:int -> len:int -> unit
-      = "core_array_unsafe_float_blit" "noalloc"
+      = "core_array_unsafe_float_blit" "noalloc" *)
   end
 
   (** [of_array_id] and [to_array_id] return the same underlying array.  On the other

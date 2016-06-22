@@ -79,7 +79,7 @@ module Stat : sig
     stack_size : int
     (** Current size of the stack, in words. *)
   }
-  [@@deriving bin_io, sexp, fields]
+  [@@deriving sexp, fields]
 
   include Comparable.S with type t := t
 end
@@ -153,7 +153,7 @@ module Control : sig
         can be better for programs with fragmentation problems.
         Default: 0. *)
   }
-  [@@deriving bin_io, sexp, fields]
+  [@@deriving sexp, fields]
 
   include Comparable.S with type t := t
 end

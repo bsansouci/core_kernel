@@ -84,9 +84,9 @@ module Sexpable (S1 : Sexpable.S) (S2 : Sexpable.S) = struct
   type t = S1.t * S2.t [@@deriving sexp]
 end
 
-module Binable (B1 : Binable.S) (B2 : Binable.S) = struct
-  type t = B1.t * B2.t [@@deriving bin_io]
-end
+(* module Binable (B1 : Binable.S) (B2 : Binable.S) = struct
+  type t = B1.t * B2.t
+end *)
 
 module Comparable (S1 : Comparable_sexpable) (S2 : Comparable_sexpable) = struct
   module T = struct
@@ -121,4 +121,3 @@ module Hashable_t (S1 : Hashable_sexpable) (S2 : Hashable_sexpable)
 end
 
 module Hashable = Hashable_t
-

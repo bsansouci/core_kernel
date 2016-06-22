@@ -1,4 +1,4 @@
-module Binable = Binable0
+(* module Binable = Binable0 *)
 
 module type Accessors = sig
   include Container.Generic
@@ -50,7 +50,7 @@ module type S = sig
     with type ('a, 'z) create_options := ('a, 'z) create_options_without_hashable
 end
 
-module type S_binable = sig
+(* module type S_binable = sig
   include S
   include Binable.S with type t := t
-end
+end *)

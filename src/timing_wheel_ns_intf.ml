@@ -110,7 +110,7 @@ end
 module type Interval_num = sig
 
   module Span : sig
-    type t = private Int63.t [@@deriving bin_io, compare, sexp]
+    type t = private Int63.t [@@deriving compare, sexp]
 
     include Comparable.S with type t := t
 
@@ -131,7 +131,7 @@ module type Interval_num = sig
     val succ : t -> t
   end
 
-  type t = private Int63.t [@@deriving bin_io, compare, sexp]
+  type t = private Int63.t [@@deriving compare, sexp]
 
   include Comparable.S with type t := t
   include Hashable.S   with type t := t

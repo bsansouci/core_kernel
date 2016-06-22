@@ -4,11 +4,10 @@
   "description": "Industrial strength alternative to OCaml's standard library",
   "license": "Apache-2.0",
   "scripts": {
-    "preinstall": "config/detect.sh && config/discover.sh `which ocamlc` src/config.h && node runMe.js" 
+    "preinstall": "config/detect.sh && config/discover.sh `which ocamlc` src/config.h && node runMe.js"
   },
   "cdeps": ["bigarray"],
   "dependencies": {
-    "bin_prot": "0.0.1",
     "fieldslib": "0.0.1",
     "ocamlResult": "0.0.1",
     "sexplib": "0.0.1",

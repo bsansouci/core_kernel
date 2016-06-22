@@ -12,14 +12,14 @@ module Hashable : sig
       type key
 
       module Table : sig
-        type 'a t = (key, 'a) Hashtbl.t [@@deriving sexp, bin_io]
+        type 'a t = (key, 'a) Hashtbl.t [@@deriving sexp]
       end
 
       module Hash_set : sig
-        type t = key Hash_set.t [@@deriving sexp, bin_io]
+        type t = key Hash_set.t [@@deriving sexp]
       end
     end
 
-    module Make (Key : Hashtbl.Key_binable) : S with type key := Key.t
+    module Make (Key : Hashtbl.Key) : S with type key := Key.t
   end
 end

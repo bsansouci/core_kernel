@@ -1,6 +1,6 @@
 open Typerep_lib.Std
 open Sexplib.Std
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 module Char  = Caml.Char
 module List  = Caml.ListLabels
 module Array = Caml.ArrayLabels
@@ -8,7 +8,7 @@ module Array = Caml.ArrayLabels
 let failwithf = Core_printf.failwithf
 
 module T = struct
-  type t = char [@@deriving bin_io, sexp, typerep]
+  type t = char [@@deriving sexp, typerep]
 
   let compare = Char.compare
   let hash = Hashtbl.hash

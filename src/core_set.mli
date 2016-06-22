@@ -307,7 +307,7 @@ module Merge_to_sequence_element : sig
     | Left of 'a
     | Right of 'a
     | Both of 'a * 'a
-  [@@deriving bin_io, compare, sexp]
+  [@@deriving compare, sexp]
 end
 val merge_to_sequence
   :  ?order               : [ `Increasing (** default *) | `Decreasing ]
@@ -349,7 +349,7 @@ module Poly : sig
       with type comparator_witness := Comparator.Poly.comparator_witness
   end
 
-  type 'elt t = ('elt, Comparator.Poly.comparator_witness) set [@@deriving bin_io, compare, sexp]
+  type 'elt t = ('elt, Comparator.Poly.comparator_witness) set [@@deriving compare, sexp]
 
   include Creators_and_accessors1
     with type ('a, 'b) set := ('a, 'b) set
@@ -366,7 +366,7 @@ module type Elt = Elt
 
 (** The signature that something needs to match in order to be used as a set element if
     the resulting set is going to support [bin_io]. *)
-module type Elt_binable = Elt_binable
+(* module type Elt_binable = Elt_binable *)
 
 (** Module signature for a Set. *)
 module type S = S0
@@ -374,16 +374,16 @@ module type S = S0
   with type ('a, 'b) tree := ('a, 'b) Tree.t
 
 (** Module signature for a Set that supports [bin_io]. *)
-module type S_binable = S0_binable
+(* module type S_binable = S0_binable
   with type ('a, 'b) set  := ('a, 'b) t
-  with type ('a, 'b) tree := ('a, 'b) Tree.t
+  with type ('a, 'b) tree := ('a, 'b) Tree.t *)
 
 (** [Make] builds a set from an element type that has a [compare] function but doesn't
     have a comparator.  This generates a new comparator.
 
     [Make_binable] is similar, except the element and set types support [bin_io]. *)
 module Make         (Elt : Elt)         : S         with type Elt.t = Elt.t
-module Make_binable (Elt : Elt_binable) : S_binable with type Elt.t = Elt.t
+(* module Make_binable (Elt : Elt_binable) : S_binable with type Elt.t = Elt.t *)
 
 (** [Make_using_comparator] builds a set from an element type that has a comparator.
 
@@ -397,13 +397,13 @@ end)
     with type Elt.t = Elt.t
     with type Elt.comparator_witness = Elt.comparator_witness
 
-module Make_binable_using_comparator (Elt : sig
-  type t [@@deriving bin_io, sexp]
+(* module Make_binable_using_comparator (Elt : sig
+  type t [@@deriving sexp]
   include Comparator.S with type t := t
 end)
   : S_binable
     with type Elt.t = Elt.t
-    with type Elt.comparator_witness = Elt.comparator_witness
+    with type Elt.comparator_witness = Elt.comparator_witness *)
 
 (** The following types and functors may be used to define stable modules *)
 module Stable : sig

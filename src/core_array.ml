@@ -3,7 +3,7 @@ module Array = StdLabels.Array
 module Core_sequence = Sequence
 open Typerep_lib.Std
 open Sexplib.Std
-open Bin_prot.Std
+(* open Bin_prot.Std *)
 
 module List = Core_list
 
@@ -11,7 +11,7 @@ let invalid_argf = Core_printf.invalid_argf
 
 let failwiths = Error.failwiths
 
-type 'a t = 'a array [@@deriving bin_io, compare, sexp, typerep]
+type 'a t = 'a array [@@deriving compare, sexp, typerep]
 
 module T = struct
   (* This module implements a new in-place, constant heap sorting algorithm to replace the
@@ -944,13 +944,15 @@ module T = struct
      https://janestreet.github.io/ocaml-perf-notes.html *)
   module Int = struct
 
-    type t_ = int array [@@deriving bin_io, compare, sexp]
+    type t_ = int array [@@deriving compare, sexp]
 
-    module Unsafe_blit = struct
-      external unsafe_blit
+    (* module Unsafe_blit = struct
+    let unsafe_blit: src:t_ -> src_pos:int -> dst:t_ -> dst_pos:int -> len:int -> unit =
+      fun ~src ~src_pos ~dst ~dst_pos ~len -> ()
+      (* external unsafe_blit
         : src:t_ -> src_pos:int -> dst:t_ -> dst_pos:int -> len:int -> unit
-        = "core_array_unsafe_int_blit" "noalloc"
-    end
+        = "core_array_unsafe_int_blit" "noalloc" *)
+    end *)
 
     include
       Blit.Make
@@ -963,23 +965,25 @@ module T = struct
           type t = t_ [@@deriving sexp_of]
           include Sequence
           let create ~len = create ~len 0
-          include Unsafe_blit
+          (* include Unsafe_blit *)
         end)
     ;;
 
-    include Unsafe_blit
+    (* include Unsafe_blit *)
 
   end
 
   module Float = struct
 
-    type t_ = float array [@@deriving bin_io, compare, sexp]
+    type t_ = float array [@@deriving compare, sexp]
 
-    module Unsafe_blit = struct
-      external unsafe_blit
+    (* module Unsafe_blit = struct
+      let unsafe_blit: src:t_ -> src_pos:int -> dst:t_ -> dst_pos:int -> len:int -> unit =
+        fun ~src ~src_pos ~dst ~dst_pos ~len -> ()
+      (* external unsafe_blit
         : src:t_ -> src_pos:int -> dst:t_ -> dst_pos:int -> len:int -> unit
-        = "core_array_unsafe_float_blit" "noalloc"
-    end
+        = "core_array_unsafe_float_blit" "noalloc" *)
+    end *)
 
     include
       Blit.Make
@@ -992,11 +996,11 @@ module T = struct
           type t = t_ [@@deriving sexp_of]
           include Sequence
           let create ~len = create ~len 0.
-          include Unsafe_blit
+          (* include Unsafe_blit *)
         end)
     ;;
 
-    include Unsafe_blit
+    (* include Unsafe_blit *)
 
   end
 end
@@ -1136,26 +1140,26 @@ module type Permissioned = sig
 end
 
 module Permissioned : sig
-  type ('a, -'perms) t [@@deriving bin_io, compare, sexp]
+  type ('a, -'perms) t [@@deriving compare, sexp]
 
   module Int : sig
-    type nonrec -'perms t = (int, 'perms) t [@@deriving bin_io, compare, sexp]
+    type nonrec -'perms t = (int, 'perms) t [@@deriving compare, sexp]
 
     include Blit.S_permissions with type 'perms t := 'perms t
 
-    external unsafe_blit
+    (* external unsafe_blit
       : src:[> read] t -> src_pos:int -> dst:[> write] t -> dst_pos:int -> len:int -> unit
-      = "core_array_unsafe_int_blit" "noalloc"
+      = "core_array_unsafe_int_blit" "noalloc" *)
   end
 
   module Float : sig
-    type nonrec -'perms t = (float, 'perms) t [@@deriving bin_io, compare, sexp]
+    type nonrec -'perms t = (float, 'perms) t [@@deriving compare, sexp]
 
     include Blit.S_permissions with type 'perms t := 'perms t
 
-    external unsafe_blit
+    (* external unsafe_blit
       : src:[> read] t -> src_pos:int -> dst:[> write] t -> dst_pos:int -> len:int -> unit
-      = "core_array_unsafe_float_blit" "noalloc"
+      = "core_array_unsafe_float_blit" "noalloc" *)
   end
 
   val of_array_id : 'a array -> ('a, [< read_write]) t
@@ -1165,18 +1169,18 @@ module Permissioned : sig
 
   include Permissioned with type ('a, 'perms) t := ('a, 'perms) t
 end = struct
-  type ('a, -'perms) t = 'a array [@@deriving bin_io, compare, sexp, typerep]
+  type ('a, -'perms) t = 'a array [@@deriving compare, sexp, typerep]
 
   module Int = struct
     include T.Int
 
-    type -'perms t = t_ [@@deriving bin_io, compare, sexp]
+    type -'perms t = t_ [@@deriving compare, sexp]
   end
 
   module Float = struct
     include T.Float
 
-    type -'perms t = t_ [@@deriving bin_io, compare, sexp]
+    type -'perms t = t_ [@@deriving compare, sexp]
   end
 
   let to_array_id = Fn.id
@@ -1282,12 +1286,12 @@ let max_length = Sys.max_array_length
 
 module Int = struct
   include T.Int
-  type t = t_ [@@deriving bin_io, compare, sexp]
+  type t = t_ [@@deriving compare, sexp]
 end
 
 module Float = struct
   include T.Float
-  type t = t_ [@@deriving bin_io, compare, sexp]
+  type t = t_ [@@deriving compare, sexp]
 end
 
 module Check1 (M : S) : sig

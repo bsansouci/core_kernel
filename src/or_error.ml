@@ -3,12 +3,12 @@ open Core_result.Export
 
 module Stable = struct
   module V1 = struct
-    type 'a t = ('a, Error.Stable.V1.t) Core_result.Stable.V1.t [@@deriving bin_io, compare, sexp]
+    type 'a t = ('a, Error.Stable.V1.t) Core_result.Stable.V1.t [@@deriving compare, sexp]
 
     let map x ~f = Core_result.Stable.V1.map x ~f1:f ~f2:Fn.id
   end
   module V2 = struct
-    type 'a t = ('a, Error.Stable.V2.t) Core_result.Stable.V1.t [@@deriving bin_io, compare, sexp]
+    type 'a t = ('a, Error.Stable.V2.t) Core_result.Stable.V1.t [@@deriving compare, sexp]
 
     let map x ~f = Core_result.Stable.V1.map x ~f1:f ~f2:Fn.id
   end
@@ -18,7 +18,7 @@ end
    format, and we don't want to change this "unstable" format, which is in use.  We just
    introduced the stable format, so people haven't yet had the time to adjust code to use
    it. *)
-type 'a t = ('a, Error.t) Core_result.t [@@deriving bin_io, compare, sexp]
+type 'a t = ('a, Error.t) Core_result.t [@@deriving compare, sexp]
 
 let invariant invariant_a t =
   match t with
@@ -138,5 +138,3 @@ let find_map_ok l ~f =
       match f elt with
       | (Ok _ as x) -> return x
       | Error err -> err))))
-
-

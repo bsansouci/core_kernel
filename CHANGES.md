@@ -1435,7 +1435,7 @@
 - Added `Binable.Of_binable` functors, similar to `Sexpable.Of_sexpable`
 
     One should use `Binable.Of_binable` rather than the functionally
-    equivalent `Bin_prot.Utils.Make_binable`.
+    equivalent `OcamlBin_prot.Utils.Make_binable`.
 
 - Added `Either` module, with
   `type ('a, 'b) t = First  of 'a | Second of 'b`.

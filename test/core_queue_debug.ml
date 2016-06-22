@@ -8,7 +8,7 @@ module Debug (Queue : module type of Queue) = struct
 
   open Queue
 
-  type nonrec 'a t = 'a t [@@deriving bin_io, sexp]
+  type nonrec 'a t = 'a t [@@deriving sexp]
 
   let invariant = invariant
 

@@ -399,10 +399,10 @@ let sexp_of_t sexp_of_a t = to_list t |> [%sexp_of: a list]
 
 let t_of_sexp a_of_sexp sexp = sexp |> [%of_sexp: a list] |> of_list
 
-include
+(* include
   Bin_prot.Utils.Make_iterable_binable1 (struct
     type nonrec 'a t = 'a t
-    type 'a el       = 'a [@@deriving bin_io]
+    type 'a el       = 'a
 
     let module_name = Some "Core.Queue"
     let length      = length
@@ -415,7 +415,7 @@ include
       done;
       t.length <- len;
       t
-  end)
+  end) *)
 
 include
   Binary_searchable.Make1 (struct

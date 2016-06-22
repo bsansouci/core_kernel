@@ -25,7 +25,7 @@ type t =
 | Less
 | Equal
 | Greater
-[@@deriving bin_io, compare, sexp]
+[@@deriving compare, sexp]
 
 (** [of_int n] is:
 

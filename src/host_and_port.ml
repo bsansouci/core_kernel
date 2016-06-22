@@ -2,7 +2,7 @@ open Std_internal
 
 module Stable = struct
   module V1 = struct
-    type t = string * int [@@deriving sexp, bin_io, compare]
+    type t = string * int [@@deriving sexp, compare]
   end
 end
 

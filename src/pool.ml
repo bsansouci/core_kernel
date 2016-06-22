@@ -101,19 +101,11 @@ module Pool = struct
    both numbers as constants for performance reasons -- the compiler generates better
    code when they are constants rather than expressions. *)
 
-#ifdef JSC_ARCH_SIXTYFOUR
-
-let () = assert (Int.num_bits = 63)
-let array_index_num_bits = 30
-let masked_tuple_id_num_bits = 33
-
-#else
 
 let () = assert (Int.num_bits = 31 || Int.num_bits = 32)
 let array_index_num_bits = 22
 let masked_tuple_id_num_bits = Int.num_bits - array_index_num_bits
 
-#endif
 
 let%test _ = array_index_num_bits > 0
 let%test _ = masked_tuple_id_num_bits > 0
@@ -151,11 +143,7 @@ end = struct
   let init = 0
 
   let next t =
-#ifdef JSC_ARCH_SIXTYFOUR
-    t + 1
-#else
     if t = Int.max_value then 0 else t + 1
-#endif
 ;;
 
 let to_int t = t
@@ -201,7 +189,7 @@ module Pointer : sig
   val first_slot_index : _ t -> int
 
   module Id : sig
-    type t [@@deriving bin_io, sexp]
+    type t [@@deriving sexp]
 
     val to_int63 : t -> Int63.t
     val of_int63 : Int63.t -> t
@@ -897,7 +885,7 @@ module Debug (Pool : S) = struct
     module Id = struct
       open Id
 
-      type nonrec t = t [@@deriving bin_io, sexp]
+      type nonrec t = t [@@deriving sexp]
 
       let of_int63 i =
         debug "Pointer.Id.of_int63" [] i
