@@ -337,15 +337,15 @@ end = struct
   let (<>.) t u = Int63.(abs (t - u)) > epsilon
   let robustly_compare t u = if t <. u then -1 else if t >. u then 1 else 0
 
-  external since_unix_epoch_or_zero : unit -> t
-    = "core_kernel_time_ns_gettime_or_zero"
+  (* external since_unix_epoch_or_zero : unit -> t
+    = "core_kernel_time_ns_gettime_or_zero" *)
 
   let gettime_failed () = failwith "gettimeofday failed"
 
-  let since_unix_epoch () =
+  (* let since_unix_epoch () =
     let t = since_unix_epoch_or_zero () in
     if t <> zero then t else gettime_failed ()
-  ;;
+  ;; *)
 
   let random ?state () =
     Int63.random ?state (max_value     + Int63.one) -
@@ -365,7 +365,7 @@ type t = Span.t (* since the Unix epoch (1970-01-01 00:00:00 UTC) *)
 
 include (Span : Comparable.Infix with type t := t)
 
-let now = Span.since_unix_epoch
+(* let now = Span.since_unix_epoch *)
 
 let equal = Span.equal
 
@@ -429,7 +429,8 @@ module Alternate_sexp = struct
 
     (* We have pulled this up here so that we have a way for formatting times in their
        sexp representation. *)
-    external format : float -> string -> string = "core_kernel_time_ns_format"
+    (* external format : float -> string -> string = "core_kernel_time_ns_format" *)
+    let format : float -> string -> string = fun _ _ -> (assert false; "hello world")
 
     let of_time time =
       { human_readable = format (Span.to_sec time) time_format

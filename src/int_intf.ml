@@ -172,7 +172,7 @@ module type S = sig
   (** {9 Population count} *)
 
   (** returns the number of 1 bits in the binary representation of the input *)
-  val popcount : t -> int
+  (* val popcount : t -> int *)
 
   (** {9 Conversion functions to related integer types} *)
 

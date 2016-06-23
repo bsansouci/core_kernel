@@ -7,8 +7,10 @@ let overflow () =
   Core_printf.invalid_argf "integer overflow in pow" ()
 
 (* To implement [int64_pow], we use C code rather than OCaml to eliminate allocation. *)
-external int_math_int_pow   : int   -> int   -> int   = "int_math_int_pow_stub" "noalloc"
-external int_math_int64_pow : int64 -> int64 -> int64 = "int_math_int64_pow_stub"
+(* external int_math_int_pow   : int   -> int   -> int   = "int_math_int_pow_stub" "noalloc" *)
+let int_math_int_pow   : int   -> int   -> int   = fun a b -> (assert false; 0)
+(* external int_math_int64_pow : int64 -> int64 -> int64 = "int_math_int64_pow_stub" *)
+let int_math_int64_pow : int64 -> int64 -> int64 = fun a b -> (assert false; 0L)
 
 let int_pow base exponent =
   if exponent < 0 then negative_exponent ();
@@ -72,7 +74,7 @@ let%bench_module "int_math_pow" = (module struct
 end)
 
 (* C stub for int popcount to use the POPCNT instruction where possible *)
-external int_popcount : int -> int = "int_math_int_popcount" "noalloc"
+(* external int_popcount : int -> int = "int_math_int_popcount" "noalloc" *)
 
 (* To maintain javascript compatibility and enable unboxing, we implement popcount in
    OCaml rather than use C stubs. Implementation adapted from:
@@ -112,7 +114,7 @@ let nativeint_popcount =
 (* Using [%bench_fun] to bind the input outside the benchmarked code actually has less
    overhead then using [%bench] naively. *)
 let%bench_fun "popcount_bench_overhead" = let n = 0  in fun () -> Fn.id              n
-let%bench_fun "int_popcount"            = let n = 0  in fun () -> int_popcount       n
+(* let%bench_fun "int_popcount"            = let n = 0  in fun () -> int_popcount       n *)
 let%bench_fun "int32_popcount"          = let n = 0l in fun () -> int32_popcount     n
 let%bench_fun "int64_popcount"          = let n = 0L in fun () -> int64_popcount     n
 let%bench_fun "nativeint_popcount"      = let n = 0n in fun () -> nativeint_popcount n
@@ -121,7 +123,7 @@ let%test_module "popcount" =
   (module struct
     open Sexplib.Std
 
-    let test_int       n bits = [%test_result: int] (int_popcount       n) ~expect:bits
+    (* let test_int       n bits = [%test_result: int] (int_popcount       n) ~expect:bits *)
     let test_int32     n bits = [%test_result: int] (int32_popcount     n) ~expect:bits
     let test_int64     n bits = [%test_result: int] (int64_popcount     n) ~expect:bits
     let test_nativeint n bits = [%test_result: int] (nativeint_popcount n) ~expect:bits
@@ -207,7 +209,7 @@ let%test_module "popcount" =
       | 64 -> test ()
       | _  -> assert false
 
-    let%test_unit _ = does_not_allocate (fun x -> int_popcount x)
+    (* let%test_unit _ = does_not_allocate (fun x -> int_popcount x) *)
     let%test_unit _ = does_not_allocate (fun x -> int32_popcount     (Int32.of_int     x))
     let%test_unit _ = does_not_allocate (fun x -> int64_popcount     (Int64.of_int     x))
     let%test_unit _ = does_not_allocate (fun x -> nativeint_popcount (Nativeint.of_int x))

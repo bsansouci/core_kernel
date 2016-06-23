@@ -252,7 +252,7 @@ include Int_pow2
    more direct. *)
 let sign = Sign.of_int
 
-let popcount = Int_math.int_popcount
+(* let popcount = Int_math.int_popcount *)
 
 include Pretty_printer.Register (struct
   type nonrec t = t

@@ -114,7 +114,7 @@ module type Span = sig
   val to_int_ns : t   -> int
   val of_int_ns : int -> t
 
-  val since_unix_epoch : unit -> t
+  (* val since_unix_epoch : unit -> t *)
 
   val random : ?state:Random.State.t -> unit -> t
 
@@ -150,7 +150,7 @@ module type Time_ns = sig
   val min_value : t
   val max_value : t
 
-  val now : unit -> t
+  (* val now : unit -> t *)
 
   val add : t -> Span.t -> t (** overflows silently *)
 
