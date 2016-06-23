@@ -594,7 +594,16 @@ end)
 
 let int63_round_nearest_arch64_noalloc_exn f = Core_int63.of_int (iround_nearest_exn f)
 
+#ifdef JSC_ARCH_SIXTYFOUR
+let int63_round_nearest_exn = int63_round_nearest_arch64_noalloc_exn
+let%test _ =
+  let before = Core_gc.minor_words () in
+  assert (int63_round_nearest_exn 0.8 = Core_int63.of_int_exn 1);
+  let after = Core_gc.minor_words () in
+  before = after
+#else
 let int63_round_nearest_exn = int63_round_nearest_portable_alloc_exn
+#endif
 
 let%bench_module "round_nearest portability/performance" = (module struct
   let f = if Random.bool () then 1.0 else 2.0
@@ -1024,6 +1033,20 @@ let%test "int_pow misc" =
   && int_pow (-1.) Pervasives.max_int = -1.
   && int_pow (-1.) Pervasives.min_int = 1.
 
+#ifdef JSC_ARCH_SIXTYFOUR
+(* some ugly corner cases with extremely large exponents and some serious precision loss *)
+let%test "int_pow bad cases" =
+  let a = one_ulp `Down 1. in
+  let b = one_ulp `Up 1. in
+  let large = 1 lsl 61 in
+  let small = ~- large in
+  (* this huge discrepancy comes from the fact that [1 / a = b] but this is a very poor
+     approximation, and in particular [1 / b = one_ulp `Down a = a * a]. *)
+  a **    float small = 1.5114276650041252e+111
+  &&  int_pow a small = 2.2844048619719663e+222
+  &&  int_pow b large = 2.2844048619719663e+222
+  && b ** float large = 2.2844135865396268e+222
+#endif
 
 module Replace_polymorphic_compare = struct
   let equal = equal
@@ -2052,5 +2075,40 @@ let%bench_module "int_pow" = (module struct
        done
     )
 
+#ifdef JSC_ARCH_SIXTYFOUR
+  let int_1_111_111_111     = Int64.to_int 1_111_111_111L
+  let int_1_111_111_111_111 = Int64.to_int 1_111_111_111_111L
+
+  (* Now, some outrageously large exponents one probably never needs.  But if one does
+     need them, the base is probably close to 1. *)
+  let%bench_fun "int_pow huge exponent x10"
+                   [@indexed n = [int_1_111_111_111; int_1_111_111_111_111; Pervasives.max_int]] =
+    (fun () ->
+       let base = box 1.000000000001 in
+       for _ = 1 to 10 do
+         let _ =  0. +. int_pow base n in ()
+       done
+    )
+
+  (* For comparison: *)
+  let%bench_fun "** x10" [@indexed n = [1;2;3;5;20;61;-61;1010]] =
+    (fun () ->
+       let base = box 1.07 in
+       let n = float n in
+       for _ = 1 to 10 do
+         let _ =  0. +. base ** n in ()
+       done
+    )
+
+  let%bench_fun "** huge exponent x10"
+                  [@indexed n = [int_1_111_111_111; int_1_111_111_111_111; Pervasives.max_int]] =
+    (fun () ->
+       let base = box 1.000000000001 in
+       let n = float n in
+       for _ = 1 to 10 do
+         let _ =  0. +. base ** n in ()
+       done
+    )
+#endif
 
 end)
