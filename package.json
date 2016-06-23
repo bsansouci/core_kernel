@@ -1,10 +1,11 @@
 {
-  "name": "ocamlCore_kernel",
+  "name": "core_kernel",
   "version": "0.0.1",
   "description": "Industrial strength alternative to OCaml's standard library",
   "license": "Apache-2.0",
   "scripts": {
-    "preinstall": "config/detect.sh && config/discover.sh `which ocamlc` src/config.h && node runMe.js"
+    "preinstall": "config/detect.sh && config/discover.sh `which ocamlc` src/config.h",
+    "postinstall": "node runMe.js"
   },
   "jengaboot": {
     "ocamlfindDependencies": {
@@ -13,17 +14,17 @@
     "ppxFlag": "ppx-jane -as-ppx -inline-test-lib core -inline-test-drop -bench-drop"
   },
   "dependencies": {
-    "fieldslib": "0.0.1",
-    "ocamlResult": "0.0.1",
-    "sexplib": "0.0.1",
-    "typerep_lib": "0.0.1",
-    "variantslib": "0.0.1",
-    "ppx_inline_test": "0.0.1",
-    "ppx_assert_lib": "0.0.1",
-    "OcamlCppo": "git://github.com/bsansouci/cppo.git"
+    "OcamlCppo": "git://github.com/bsansouci/cppo.git#jengaboot",
+    "fieldslib": "git://github.com/bsansouci/fieldslib.git",
+    "ocamlResult": "git://github.com/bsansouci/result.git",
+    "sexplib": "git://github.com/bsansouci/sexplib.git",
+    "typerep_lib": "git://github.com/bsansouci/typerep.git",
+    "variantslib": "git://github.com/bsansouci/variantslib.git",
+    "ppx_inline_test": "git://github.com/bsansouci/ppx_inline_test.git",
+    "ppx_assert_lib": "git://github.com/bsansouci/ppx_assert.git"
   },
   "devDependencies": {
-    "jengaboot": "*"
+    "jengaboot": "git://github.com/bsansouci/jengaboot.git#tmp"
   },
   "repository": {
     "type": "git",

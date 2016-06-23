@@ -10,8 +10,6 @@ var deps = ['OcamlCppo'], index = 0;
     cppo('-n', 'src/pow_overflow_bounds.ml', '-o', 'src/pow_overflow_bounds.ml');
     cppo('-n', 'src/float.ml', '-o', 'src/float.ml');
     cppo('-n', 'src/time_ns.ml', '-o', 'src/time_ns.ml');
-    cppo('-n', 'src/bigstring.ml', '-o', 'src/bigstring.ml');
-    cppo('-n', 'src/binary_packing.ml', '-o', 'src/binary_packing.ml');
     return;
   } else if(isModuleExists(deps[index])) {
     index += 1;
